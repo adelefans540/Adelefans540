@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADELE_FANS - En Vivo y Transmisiones</title>
+    
+    <!-- Librería de Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Firebase SDK (v11.6.1 Web Modules) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, collection, addDoc, doc, setDoc, getDoc, 
+            onSnapshot, serverTimestamp, deleteDoc 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Configuración de Firebase proporcionada
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAW-bBHn7MXXJNsVW0EAiH5kf69C9DAeg",
+            authDomain: "app-de-proyectos-3279c.firebaseapp.com",
+            projectId: "app-de-proyectos-3279c",
+            storageBucket: "app-de-proyectos-3279c.firebasestorage.app",
+            messagingSenderId: "1055271736396",
+            appId: "1:1055271736396:web:e486e47d23f1c6420f50e9",
+            measurementId: "G-09W0G43NXG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'adele-fans-app';
+
+        window.fb = { auth, db, appId, collection, addDoc, doc, setDoc, getDoc, onSnapshot, serverTimestamp, deleteDoc };
+
+        // Autenticación Anónima
+        signInAnonymously(auth).catch((error) => console.error("Error Auth Firebase:", error));
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.currentUser = user;
+                initFirebaseStreamLogic(user.uid);
+            }
+        });
+    </script>
+
+    <style>
+        /* === VARIABLES GLOBALES (Alineadas con index.html) === */
+        :root {
+            --primary-red: #660000;
+            --dark-bg: #110000;
+            --text-light: #f5f5f5;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --gold: #d4af37;
+            --font-family: 'Helvetica Neue', Arial, sans-serif;
+            --bg-image: url('tema.jpeg');
+        }
+
+        /* --- TEMA: ROJO Y BLANCO --- */
+        body.theme-red-white {
+            --primary-red: #b30000;
+            --dark-bg: #ffffff;
+            --text-light: #1a1a1a;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(179, 0, 0, 0.3);
+            --gold: #cc0000;
+            --bg-image: none;
+            background: linear-gradient(135deg, #ffffff, #ffe6e6) !important;
+        }
+
+        /* --- TEMA: LIQUID GLASS ELEGANTE --- */
+        body.theme-liquid-glass {
+            --primary-red: #0a0a0a;
+            --dark-bg: #000000;
+            --text-light: #e0e0e0;
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gold: #88ccff;
+            --bg-image: url('https://i.pinimg.com/736x/d7/07/90/d707903b5b261ef08afb8ab23772d222.jpg');
+        }
+
+        /* --- MODO CLARO --- */
+        body.light-mode {
+            --dark-bg: #f8f9fa;
+            --text-light: #212529;
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
+            --bg-image: none;
+        }
+
+        /* --- DESACTIVAR ANIMACIONES --- */
+        body.no-animations * {
+            animation: none !important;
+            transition: none !important;
+            scroll-behavior: auto !important;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+            transition: background-color 0.4s, color 0.4s;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg), var(--primary-red));
+            background-image: var(--bg-image);
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: var(--text-light);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        @keyframes pulse-red {
+            0% { transform: scale(1); box-shadow: 0 0 5px #ff0000; opacity: 1; }
+            50% { transform: scale(1.05); box-shadow: 0 0 18px #ff0000; opacity: 0.85; }
+            100% { transform: scale(1); box-shadow: 0 0 5px #ff0000; opacity: 1; }
+        }
+
+        .fade-in { animation: fadeIn 1s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === BARRA DE NAVEGACIÓN === */
+        nav {
+            position: fixed;
+            top: 0; width: 100%; height: 80px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5%; z-index: 1000;
+            background: rgba(17, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .logo-container { display: flex; align-items: center; gap: 15px; cursor: pointer; text-decoration: none; }
+        .logo-container:hover { transform: scale(1.04); }
+        .perfil-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
+        .logo-text { font-size: 22px; font-weight: bold; letter-spacing: 2px; color: var(--text-light); }
+        
+        .hamburger { display: flex; flex-direction: column; gap: 6px; cursor: pointer; z-index: 1100; }
+        .hamburger span { width: 35px; height: 4px; background-color: var(--text-light); border-radius: 2px; transition: all 0.3s ease; }
+        .hamburger.active span:nth-child(1) { transform: translateY(10px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+
+        .sidebar {
+            position: fixed; top: 0; right: -300px; width: 300px; height: 100vh;
+            background: rgba(20, 0, 0, 0.92); backdrop-filter: blur(20px);
+            border-left: 1px solid var(--glass-border);
+            display: flex; flex-direction: column; padding-top: 100px;
+            transition: right 0.4s ease; z-index: 999;
+        }
+        .sidebar.open { right: 0; }
+        .sidebar a { color: #fff; text-decoration: none; font-size: 20px; padding: 20px 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar a:hover { color: var(--gold); background: rgba(255,255,255,0.05); }
+
+        /* === TRANSMISIÓN LAYOUT === */
+        main { padding: 100px 5% 40px; max-width: 1600px; margin: 0 auto; }
+        .stream-layout { display: grid; grid-template-columns: 2.5fr 1fr; gap: 20px; align-items: start; }
+
+        .player-section {
+            background: var(--glass-bg); backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border); border-radius: 18px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        .video-container { position: relative; width: 100%; aspect-ratio: 16 / 9; background-color: #000; }
+        
+        .waiting-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.75), rgba(102,0,0,0.85)), url('adele_fans.banner.jpeg') center/cover;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; z-index: 10;
+            padding: 20px;
+        }
+        .waiting-title { color: var(--gold); font-size: 28px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px;}
+        .countdown { font-size: 48px; font-weight: bold; text-shadow: 0 5px 15px rgba(0,0,0,0.8); margin-bottom: 20px; font-variant-numeric: tabular-nums;}
+        .bell-btn { background: var(--gold); color: #111; border: none; padding: 12px 28px; font-size: 15px; font-weight: bold; border-radius: 30px; cursor: pointer; transition: 0.3s; }
+        .bell-btn:hover { opacity: 0.85; transform: scale(1.05); }
+
+        .real-video { width: 100%; height: 100%; display: none; outline: none; object-fit: contain; background: #000; }
+
+        /* === DETALLES DE LA TRANSMISIÓN === */
+        .video-details { padding: 25px; }
+        
+        .video-title-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; margin-bottom: 12px; }
+        .video-title { font-size: 26px; font-weight: bold; color: var(--text-light); }
+        .btn-admin-config {
+            background: rgba(212, 175, 55, 0.2); color: var(--gold); border: 1px solid var(--gold);
+            padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer;
+            white-space: nowrap; transition: 0.3s;
+        }
+        .btn-admin-config:hover { background: var(--gold); color: #111; }
+
+        .video-stats { display: flex; align-items: center; gap: 15px; margin-bottom: 18px; font-size: 14px; color: #ccc; flex-wrap: wrap; }
+        .live-badge {
+            display: none; background-color: #ff0000; color: #ffffff; padding: 4px 12px;
+            border-radius: 5px; font-weight: bold; font-size: 12px; letter-spacing: 1px;
+            animation: pulse-red 1.5s infinite;
+        }
+        .viewers-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.08); padding: 4px 12px; border-radius: 20px; font-weight: 500; }
+
+        .channel-info { display: flex; align-items: center; gap: 15px; padding-top: 15px; border-top: 1px solid var(--glass-border); margin-top: 10px; }
+        .channel-info img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; }
+        .channel-text h4 { color: var(--text-light); font-size: 18px; }
+        .channel-text p { color: #aaa; font-size: 13px; }
+
+        .desc-box {
+            background: rgba(255, 255, 255, 0.04); padding: 20px; border-radius: 12px;
+            margin-top: 18px; font-size: 15px; line-height: 1.6; border: 1px solid var(--glass-border);
+        }
+
+        .tags-container { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag-item { color: var(--gold); font-size: 13px; font-weight: 600; text-decoration: none; }
+        .links-container { margin-top: 15px; display: flex; flex-wrap: wrap; gap: 10px; }
+        .link-item {
+            background: rgba(255, 255, 255, 0.08); color: var(--text-light); padding: 6px 14px;
+            border-radius: 15px; font-size: 13px; text-decoration: none; border: 1px solid var(--glass-border);
+            display: inline-flex; align-items: center; gap: 6px; transition: 0.3s;
+        }
+        .link-item:hover { background: var(--gold); color: #111; }
+
+        /* === CHAT === */
+        .chat-section {
+            background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--glass-border);
+            border-radius: 18px; display: flex; flex-direction: column; height: 600px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        .chat-header {
+            padding: 16px; border-bottom: 1px solid var(--glass-border); font-weight: bold;
+            text-align: center; color: var(--gold); font-size: 17px; display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+        .chat-messages {
+            flex: 1; padding: 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; font-size: 14px;
+        }
+        .chat-messages::-webkit-scrollbar { width: 6px; }
+        .chat-messages::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+        .chat-msg-item { line-height: 1.4; word-break: break-word; }
+        .msg-user { font-weight: bold; color: var(--gold); margin-right: 6px; }
+        .msg-time { font-size: 10px; color: #888; margin-left: 6px; }
+
+        .chat-input-area { padding: 15px; border-top: 1px solid var(--glass-border); display: flex; gap: 10px; flex-direction: column; }
+        .chat-input-area input.username {
+            border-radius: 10px; padding: 8px 12px; width: 100%; font-size: 13px;
+            background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); color: #fff; outline: none;
+        }
+        .chat-controls { display: flex; gap: 10px; }
+        .chat-controls input {
+            flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.3); color: #fff; outline: none; font-size: 14px;
+        }
+        .chat-controls button {
+            background: var(--gold); color: #111; border: none; width: 42px; height: 42px;
+            border-radius: 50%; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center;
+        }
+        .chat-controls button:hover { opacity: 0.85; transform: scale(1.05); }
+
+        /* === MODAL PERSONALIZADO === */
+        .custom-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.82); backdrop-filter: blur(8px); display: none;
+            justify-content: center; align-items: center; z-index: 2500; padding: 20px;
+        }
+        .custom-modal {
+            background: rgba(20, 0, 0, 0.95); backdrop-filter: blur(20px); padding: 25px;
+            border-radius: 20px; border: 1px solid var(--glass-border); max-width: 550px; width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8); color: var(--text-light); max-height: 90vh; overflow-y: auto;
+        }
+        .modal-title { color: var(--gold); font-size: 22px; margin-bottom: 15px; text-align: center; font-weight: bold; }
+
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; font-size: 13px; color: var(--gold); margin-bottom: 6px; font-weight: bold; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 10px 14px; border-radius: 10px; background: rgba(255,255,255,0.08);
+            border: 1px solid var(--glass-border); color: #fff; outline: none; font-size: 14px;
+        }
+        .form-group textarea { height: 90px; resize: vertical; }
+
+        .btn-modal {
+            background: var(--gold); color: #111; border: none; padding: 12px 25px;
+            font-size: 15px; font-weight: bold; border-radius: 25px; cursor: pointer; transition: 0.3s;
+            width: 100%; margin-top: 10px;
+        }
+        .btn-modal:hover { opacity: 0.88; transform: scale(1.02); }
+
+        /* === BOTÓN Y PANEL DE AJUSTES (Alineado con Inicio) === */
+        .settings-btn {
+            position: fixed; bottom: 30px; right: 30px; width: 55px; height: 55px;
+            background: var(--gold); color: #111; border-radius: 50%; display: flex;
+            justify-content: center; align-items: center; font-size: 22px; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 1500; transition: transform 0.3s;
+        }
+        .settings-btn:hover { transform: rotate(90deg) scale(1.1); }
+
+        .settings-panel {
+            position: fixed; bottom: 95px; right: -350px; width: 300px; padding: 22px;
+            border-radius: 20px; transition: right 0.4s ease; z-index: 1499;
+            background: rgba(10, 10, 10, 0.95); border: 1px solid var(--glass-border);
+        }
+        .settings-panel.open { right: 30px; }
+        .settings-title { color: var(--gold); font-size: 19px; margin-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; text-align: center; }
+        .setting-group { margin-bottom: 18px; }
+        .setting-group label { display: block; margin-bottom: 8px; font-size: 13px; color: #ccc; }
+        
+        .theme-options { display: flex; gap: 10px; justify-content: space-between; }
+        .theme-btn { width: 55px; height: 55px; border-radius: 10px; border: 2px solid transparent; cursor: pointer; object-fit: cover; transition: 0.2s; }
+        .theme-btn:hover, .theme-btn.active { transform: scale(1.1); border-color: var(--gold); }
+
+        select {
+            width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.1);
+            color: #fff; border: 1px solid var(--glass-border); outline: none; cursor: pointer;
+        }
+        option { background: #111; color: #fff; }
+        .switch-container { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; }
+
+        @media (max-width: 992px) {
+            .stream-layout { grid-template-columns: 1fr; }
+            .chat-section { height: 420px; }
+            .countdown { font-size: 34px; }
+            .waiting-title { font-size: 22px; }
+            .video-title { font-size: 20px; }
+            .settings-panel { bottom: 0; height: 100vh; right: -100%; width: 100%; border-radius: 0; }
+            .settings-panel.open { right: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVEGACIÓN -->
+    <nav>
+        <a href="index.html" class="logo-container">
+            <img src="adele_fans.perfil.jpeg" alt="Perfil" class="perfil-img">
+            <span class="logo-text">ADELE_FANS</span>
+        </a>
+        <div class="hamburger" id="hamburger-btn">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+
+    <!-- MENÚ LATERAL -->
+    <div class="sidebar" id="sidebar">
+        <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+        <a href="comunidad.html" onclick="cerrarMenu()"><i class="fas fa-video"></i> Transmisiones</a>
+        <a href="index.html#galeria" onclick="cerrarMenu()"><i class="fas fa-images"></i> Galería</a>
+        <a href="index.html#albumes" onclick="cerrarMenu()"><i class="fas fa-compact-disc"></i> Álbumes</a>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main>
+        <div class="stream-layout">
+            
+            <!-- REPRODUCTOR Y DETALLES -->
+            <div class="player-section fade-in">
+                <div class="video-container">
+                    <!-- PANTALLA DE CUENTA REGRESIVA -->
+                    <div class="waiting-screen" id="pantallaEspera">
+                        <i class="fas fa-broadcast-tower" style="font-size: 42px; color: var(--gold); margin-bottom: 15px;"></i>
+                        <h2 class="waiting-title">La transmisión comienza en:</h2>
+                        <div class="countdown" id="reloj">00:00:00:00</div>
+                        <button class="bell-btn" onclick="notificarRecordatorio()"><i class="fas fa-bell"></i> Activar Recordatorio</button>
+                    </div>
+
+                    <!-- VÍDEO LOCAL O ENLACE PROPIO -->
+                    <video class="real-video" id="videoEnVivo" controls controlsList="nodownload">
+                        <source id="videoSource" src="video.mp4" type="video/mp4">
+                        Tu navegador no soporta reproducción de vídeos HTML5.
+                    </video>
+                </div>
+
+                <!-- DETALLES DE TRANSMISIÓN -->
+                <div class="video-details">
+                    <div class="video-title-header">
+                        <h1 class="video-title" id="dispTitulo">Transmisión Especial de Adele</h1>
+                        <button class="btn-admin-config" onclick="abrirConfigAdmin()"><i class="fas fa-edit"></i> Configurar En Vivo</button>
+                    </div>
+                    
+                    <div class="video-stats">
+                        <span class="live-badge" id="badgeEnVivo"><i class="fas fa-circle"></i> EN VIVO</span>
+                        <span class="viewers-badge"><i class="fas fa-eye" style="color: var(--gold);"></i> <span id="numEspectadores">1</span> en directo</span>
+                        <span><i class="fas fa-calendar-alt" style="color: var(--gold);"></i> <span id="dispFechaProg">Programado</span></span>
+                    </div>
+
+                    <div class="channel-info">
+                        <img src="adele_fans.perfil.jpeg" alt="Adele Fans">
+                        <div class="channel-text">
+                            <h4>ADELE_FANS</h4>
+                            <p>Canal Oficial de Daydreamers</p>
+                        </div>
+                    </div>
+
+                    <div class="desc-box">
+                        <strong style="color: var(--gold);">Descripción:</strong>
+                        <p id="dispDescripcion" style="margin-top: 6px;">¡Bienvenidos a la transmisión! Disfruta del vídeo especial junto a la comunidad.</p>
+                        
+                        <div class="tags-container" id="dispHashtags"></div>
+                        <div class="links-container" id="dispEnlaces"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHAT REAL EN TIEMPO REAL (FIREBASE) -->
+            <div class="chat-section fade-in">
+                <div class="chat-header">
+                    <i class="fas fa-comments"></i> Chat en Directo
+                </div>
+                
+                <div class="chat-messages" id="cajaMensajes">
+                    <div class="chat-msg-item"><span class="msg-user"><i class="fas fa-shield-alt"></i> Mod:</span> Bienvenid&#64;s al chat oficial en tiempo real. Se respetuoso con los demás Daydreamers. ❤️</div>
+                </div>
+
+                <div class="chat-input-area">
+                    <input type="text" id="inputNombre" class="username" placeholder="Tu nombre / apodo..." value="Daydreamer">
+                    <div class="chat-controls">
+                        <input type="text" id="inputChat" placeholder="Escribe un mensaje..." onkeypress="if(event.key === 'Enter') enviarMensajeChat()">
+                        <button onclick="enviarMensajeChat()"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- PANEL / MODAL DE AJUSTES VISUALES (ENGRANAJE) -->
+    <div class="settings-btn" onclick="toggleSettings()">
+        <i class="fas fa-cog"></i>
+    </div>
+
+    <div class="settings-panel" id="settingsPanel">
+        <h3 class="settings-title"><i class="fas fa-sliders-h"></i> Ajustes</h3>
+        
+        <div class="setting-group">
+            <label>Tema Visual</label>
+            <div class="theme-options">
+                <img src="adele_fans.perfil.jpeg" class="theme-btn active" title="Predeterminado" onclick="cambiarTema('default', this)">
+                <img src="https://i.pinimg.com/736x/6f/12/51/6f1251ff12fd3069b8b22e1ce5eac9c2.jpg" class="theme-btn" title="Rojo y Blanco" onclick="cambiarTema('red-white', this)">
+                <img src="https://i.pinimg.com/736x/d7/07/90/d707903b5b261ef08afb8ab23772d222.jpg" class="theme-btn" title="Liquid Glass" onclick="cambiarTema('liquid-glass', this)">
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <label>Tipografía</label>
+            <select id="fontSelector" onchange="cambiarFuente(this.value)">
+                <option value="'Helvetica Neue', Arial, sans-serif">Moderna (Predeterminada)</option>
+                <option value="'Georgia', serif">Elegante (Serif)</option>
+                <option value="'Courier New', monospace">Retro (Monoespaciada)</option>
+                <option value="cursive">Artística (Cursiva)</option>
+            </select>
+        </div>
+
+        <div class="switch-container">
+            <span><i class="fas fa-sun"></i> Modo Claro</span>
+            <input type="checkbox" id="lightModeToggle" onchange="toggleLightMode(this.checked)" style="transform: scale(1.4); cursor: pointer;">
+        </div>
+
+        <div class="switch-container">
+            <span><i class="fas fa-magic"></i> Animaciones</span>
+            <input type="checkbox" id="animToggle" checked onchange="toggleAnimaciones(this.checked)" style="transform: scale(1.4); cursor: pointer;">
+        </div>
+        
+        <button class="btn-modal" onclick="toggleSettings()" style="width: 100%; margin-top: 15px;">Cerrar Ajustes</button>
+    </div>
+
+    <!-- MODAL DE CONFIGURACIÓN DE TRANSMISIÓN (ADMIN) Y ALERTAS INTERNAS -->
+    <div class="custom-modal-overlay" id="modalOverlay">
+        <div class="custom-modal" id="modalContenido">
+            <!-- Inyectado por JS -->
+        </div>
+    </div>
+
+    <script>
+        // === INTERFAZ NAVEGACIÓN Y MENÚ ===
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const sidebar = document.getElementById('sidebar');
+
+        hamburgerBtn.addEventListener('click', () => {
+            hamburgerBtn.classList.toggle('active');
+            sidebar.classList.toggle('open');
+        });
+
+        function cerrarMenu() {
+            hamburgerBtn.classList.remove('active');
+            sidebar.classList.remove('open');
+        }
+
+        // === MODAL INTERNO SÍN DEPENDENCIAS DEL NAVEGADOR ===
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalContenido = document.getElementById('modalContenido');
+
+        function abrirModalHTML(htmlContent) {
+            modalContenido.innerHTML = htmlContent;
+            modalOverlay.style.display = 'flex';
+        }
+
+        function cerrarModal() {
+            modalOverlay.style.display = 'none';
+        }
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) cerrarModal();
+        });
+
+        function notificarRecordatorio() {
+            abrirModalHTML(`
+                <h3 class="modal-title"><i class="fas fa-bell"></i> Recordatorio Activado</h3>
+                <p style="text-align: center; margin-bottom: 20px;">¡Excelente! La página cuenta los segundos en vivo. Mantén abierta esta pestaña o regresa a la hora programada para disfrutar del estreno.</p>
+                <button class="btn-modal" onclick="cerrarModal()">Aceptar</button>
+            `);
+        }
+
+        // === AJUSTES DE PÁGINA (Sincronizados con inicio) ===
+        const settingsPanel = document.getElementById('settingsPanel');
+
+        function toggleSettings() {
+            settingsPanel.classList.toggle('open');
+            cerrarMenu();
+        }
+
+        function cambiarTema(tema, el) {
+            document.body.classList.remove('theme-red-white', 'theme-liquid-glass');
+            if (tema !== 'default') document.body.classList.add('theme-' + tema);
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            if (el) el.classList.add('active');
+        }
+
+        function cambiarFuente(font) {
+            document.documentElement.style.setProperty('--font-family', font);
+        }
+
+        function toggleLightMode(isLight) {
+            if (isLight) document.body.classList.add('light-mode');
+            else document.body.classList.remove('light-mode');
+        }
+
+        function toggleAnimaciones(isOn) {
+            if (!isOn) document.body.classList.add('no-animations');
+            else document.body.classList.remove('no-animations');
+        }
+
+        // === ESTADO Y CONFIGURACIÓN DEL EN VIVO EN FIREBASE ===
+        let streamConfig = {
+            titulo: "Especial: An Audience With Adele",
+            descripcion: "¡Hola Daydreamers! Bienvenidos a nuestra transmisión exclusiva de hoy. Prepárense para disfrutar del concierto y cantar juntos.",
+            fechaEstreno: "2026-09-04T02:45:00",
+            videoUrl: "AN-AUDIENCE-WHIT-ADELE.mov",
+            hashtags: "#Adele #Daydreamers #AdeleFans #EnVivo",
+            enlaces: "https://www.instagram.com/adele_fans540|Instagram, https://www.tiktok.com/@adele_fans542|TikTok"
+        };
+
+        let timerInterval = null;
+
+        function initFirebaseStreamLogic(userId) {
+            const { db, appId, doc, setDoc, onSnapshot, collection, addDoc, serverTimestamp, deleteDoc } = window.fb;
+
+            // 1. Escuchar Configuración de la Transmisión
+            const streamDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'stream_config', 'main');
+            
+            onSnapshot(streamDocRef, (snap) => {
+                if (snap.exists()) {
+                    streamConfig = snap.data();
+                    aplicarConfiguracionStream();
+                } else {
+                    // Guardar valor inicial si no existe
+                    setDoc(streamDocRef, streamConfig).catch(err => console.error(err));
+                    aplicarConfiguracionStream();
+                }
+            }, (err) => console.error("Error leyendo stream_config:", err));
+
+            // 2. Escuchar Chat en Tiempo Real
+            const chatColRef = collection(db, 'artifacts', appId, 'public', 'data', 'stream_chat');
+            onSnapshot(chatColRef, (snap) => {
+                const msgs = [];
+                snap.forEach(docSnap => {
+                    msgs.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                // Ordenar por tiempo local
+                msgs.sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+                renderizarMensajesChat(msgs);
+            }, (err) => console.error("Error chat:", err));
+
+            // 3. Sistema de Presencia de Espectadores Reales
+            const viewerDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'stream_viewers', userId);
+            const updatePing = () => {
+                setDoc(viewerDocRef, {
+                    lastPing: Date.now(),
+                    userId: userId
+                }).catch(err => console.error(err));
+            };
+            updatePing();
+            setInterval(updatePing, 10000); // Ping cada 10 segundos
+
+            // Escuchar número de espectadores activos
+            const viewersColRef = collection(db, 'artifacts', appId, 'public', 'data', 'stream_viewers');
+            onSnapshot(viewersColRef, (snap) => {
+                const now = Date.now();
+                let count = 0;
+                snap.forEach(dSnap => {
+                    const data = dSnap.data();
+                    if (data.lastPing && (now - data.lastPing) < 30000) { // Activos en los últimos 30s
+                        count++;
+                    }
+                });
+                document.getElementById('numEspectadores').textContent = Math.max(1, count);
+            }, (err) => console.error(err));
+        }
+
+        // === RENDERING Y CONTADOR ===
+        function aplicarConfiguracionStream() {
+            document.getElementById('dispTitulo').textContent = streamConfig.titulo || 'Transmisión Especial';
+            document.getElementById('dispDescripcion').textContent = streamConfig.descripcion || '';
+            document.getElementById('dispFechaProg').textContent = new Date(streamConfig.fechaEstreno).toLocaleString();
+
+            // Cambiar Fuente del vídeo si ha cambiado
+            const videoEl = document.getElementById('videoEnVivo');
+            const videoSrc = document.getElementById('videoSource');
+            if (videoSrc.getAttribute('src') !== streamConfig.videoUrl) {
+                videoSrc.setAttribute('src', streamConfig.videoUrl);
+                videoEl.load();
+            }
+
+            // Hashtags
+            const tagsCont = document.getElementById('dispHashtags');
+            tagsCont.innerHTML = '';
+            if (streamConfig.hashtags) {
+                const tags = streamConfig.hashtags.split(' ');
+                tags.forEach(t => {
+                    if (t.trim()) {
+                        const span = document.createElement('span');
+                        span.className = 'tag-item';
+                        span.textContent = t.startsWith('#') ? t : '#' + t;
+                        tagsCont.appendChild(span);
+                    }
+                });
+            }
+
+            // Enlaces
+            const linksCont = document.getElementById('dispEnlaces');
+            linksCont.innerHTML = '';
+            if (streamConfig.enlaces) {
+                const items = streamConfig.enlaces.split(',');
+                items.forEach(item => {
+                    const parts = item.split('|');
+                    if (parts.length >= 2) {
+                        const a = document.createElement('a');
+                        a.className = 'link-item';
+                        a.href = parts[0].trim();
+                        a.target = '_blank';
+                        a.innerHTML = `<i class="fas fa-link"></i> ${parts[1].trim()}`;
+                        linksCont.appendChild(a);
+                    }
+                });
+            }
+
+            // Iniciar Reloj Contador
+            iniciarContadorRegresivo(new Date(streamConfig.fechaEstreno).getTime());
+        }
+
+        function iniciarContadorRegresivo(tiempoEstreno) {
+            if (timerInterval) clearInterval(timerInterval);
+
+            const pantallaEspera = document.getElementById('pantallaEspera');
+            const videoEnVivo = document.getElementById('videoEnVivo');
+            const relojDiv = document.getElementById('reloj');
+            const badgeEnVivo = document.getElementById('badgeEnVivo');
+
+            timerInterval = setInterval(() => {
+                const ahora = Date.now();
+                const distancia = tiempoEstreno - ahora;
+
+                if (distancia > 0) {
+                    const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
+                    const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+                    const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
+
+                    const h = horas < 10 ? "0" + horas : horas;
+                    const m = minutos < 10 ? "0" + minutos : minutos;
+                    const s = segundos < 10 ? "0" + segundos : segundos;
+
+                    relojDiv.textContent = dias > 0 ? `${dias}d ${h}:${m}:${s}` : `${h}:${m}:${s}`;
+                    pantallaEspera.style.display = 'flex';
+                    videoEnVivo.style.display = 'none';
+                    badgeEnVivo.style.display = 'none';
+                } else {
+                    clearInterval(timerInterval);
+                    pantallaEspera.style.display = 'none';
+                    videoEnVivo.style.display = 'block';
+                    badgeEnVivo.style.display = 'inline-block';
+                }
+            }, 1000);
+        }
+
+        // === CHAT EN TIEMPO REAL ===
+        function renderizarMensajesChat(mensajes) {
+            const caja = document.getElementById('cajaMensajes');
+            caja.innerHTML = `<div class="chat-msg-item"><span class="msg-user"><i class="fas fa-shield-alt"></i> Mod:</span> Bienvenid&#64;s al chat oficial en tiempo real.❤️</div>`;
+            
+            mensajes.forEach(m => {
+                const div = document.createElement('div');
+                div.className = 'chat-msg-item';
+                const hora = m.createdAt?.seconds ? new Date(m.createdAt.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+                div.innerHTML = `<span class="msg-user">${m.nombre || 'Fan'}:</span> <span>${m.texto}</span><span class="msg-time">${hora}</span>`;
+                caja.appendChild(div);
+            });
+
+            caja.scrollTop = caja.scrollHeight;
+        }
+
+        function enviarMensajeChat() {
+            const inputChat = document.getElementById('inputChat');
+            const inputNombre = document.getElementById('inputNombre');
+            const texto = inputChat.value.trim();
+            const nombre = inputNombre.value.trim() || 'Daydreamer';
+
+            if (!texto) return;
+
+            if (window.fb && window.currentUser) {
+                const { db, appId, collection, addDoc, serverTimestamp } = window.fb;
+                addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'stream_chat'), {
+                    nombre: nombre,
+                    texto: texto,
+                    userId: window.currentUser.uid,
+                    createdAt: serverTimestamp()
+                }).then(() => {
+                    inputChat.value = '';
+                }).catch(err => console.error(err));
+            } else {
+                abrirModalHTML(`<h3 class="modal-title">Conectando...</h3><p style="text-align:center;">Cargando la conexión con Firebase. Intenta de nuevo en un segundo.</p><button class="btn-modal" onclick="cerrarModal()">Aceptar</button>`);
+            }
+        }
+
+        // === PANEL ADMIN PARA CONFIGURAR TRANSMISIÓN ===
+        function abrirConfigAdmin() {
+            const html = `
+                <h3 class="modal-title"><i class="fas fa-sliders-h"></i> Configurar Transmisión</h3>
+                <div class="form-group">
+                    <label>Título de la Transmisión</label>
+                    <input type="text" id="cfgTitulo" value="${streamConfig.titulo || ''}">
+                </div>
+                <div class="form-group">
+                    <label>Fecha y Hora de Estreno</label>
+                    <input type="datetime-local" id="cfgFecha" value="${streamConfig.fechaEstreno || ''}">
+                </div>
+                <div class="form-group">
+                    <label>Archivo de Vídeo (AN-AUDIENCE-WHIT-ADELE.mov)</label>
+                    <input type="text" id="cfgVideo" value="${streamConfig.videoUrl || 'video.mp4'}">
+                </div>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea id="cfgDesc">${streamConfig.descripcion || ''}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Hashtags (separados por espacio)</label>
+                    <input type="text" id="cfgHashtags" value="${streamConfig.hashtags || ''}" placeholder="#Adele #EnVivo">
+                </div>
+                <div class="form-group">
+                    <label>Enlaces (formato: url|Nombre, url2|Nombre2)</label>
+                    <input type="text" id="cfgEnlaces" value="${streamConfig.enlaces || ''}" placeholder="https://instagram.com/adele_fans540|Instagram">
+                </div>
+                <button class="btn-modal" onclick="guardarConfigAdmin()"><i class="fas fa-save"></i> Guardar Cambios</button>
+            `;
+            abrirModalHTML(html);
+        }
+
+        function guardarConfigAdmin() {
+            const titulo = document.getElementById('cfgTitulo').value.trim();
+            const fecha = document.getElementById('cfgFecha').value;
+            const video = document.getElementById('cfgVideo').value.trim();
+            const desc = document.getElementById('cfgDesc').value.trim();
+            const tags = document.getElementById('cfgHashtags').value.trim();
+            const links = document.getElementById('cfgEnlaces').value.trim();
+
+            if (!titulo || !fecha) {
+                abrirModalHTML(`<h3 class="modal-title">Atención</h3><p style="text-align:center;">El título y la fecha son obligatorios.</p><button class="btn-modal" onclick="abrirConfigAdmin()">Volver</button>`);
+                return;
+            }
+
+            const nuevaConfig = {
+                titulo: titulo,
+                fechaEstreno: fecha,
+                videoUrl: video || 'AN-AUDIENCE-WHIT-ADELE.mov',
+                descripcion: desc,
+                hashtags: tags,
+                enlaces: links
+            };
+
+            if (window.fb) {
+                const { db, appId, doc, setDoc } = window.fb;
+                setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'stream_config', 'main'), nuevaConfig)
+                .then(() => {
+                    cerrarModal();
+                }).catch(err => console.error("Error al guardar:", err));
+            }
+        }
+    </script>
+</body>
+</html>

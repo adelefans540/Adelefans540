@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADELE_FANS - Únete a la Comunidad</title>
+    
+    <!-- Librería de Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Librería de EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <!-- Firebase SDK (v11.6.1 Web Modules) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, collection, addDoc, serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Configuración de Firebase proporcionada
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAW-bBHn7MXXJNsVW0EAiH5kf69C9DAeg",
+            authDomain: "app-de-proyectos-3279c.firebaseapp.com",
+            projectId: "app-de-proyectos-3279c",
+            storageBucket: "app-de-proyectos-3279c.firebasestorage.app",
+            messagingSenderId: "1055271736396",
+            appId: "1:1055271736396:web:e486e47d23f1c6420f50e9",
+            measurementId: "G-09W0G43NXG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'adele-fans-app';
+
+        window.fb = { auth, db, appId, collection, addDoc, serverTimestamp };
+
+        // Autenticación Anónima
+        signInAnonymously(auth).catch((error) => console.error("Error Auth Firebase:", error));
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.currentUser = user;
+                console.log("Firebase listo para guardar registros.");
+            }
+        });
+    </script>
+
+    <style>
+        /* === VARIABLES GLOBALES (Alineadas con index.html) === */
+        :root {
+            --primary-red: #660000;
+            --dark-bg: #110000;
+            --text-light: #f5f5f5;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --gold: #d4af37;
+            --font-family: 'Helvetica Neue', Arial, sans-serif;
+            --bg-image: url('tema.jpeg');
+        }
+
+        /* --- TEMA: ROJO Y BLANCO --- */
+        body.theme-red-white {
+            --primary-red: #b30000;
+            --dark-bg: #ffffff;
+            --text-light: #1a1a1a;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(179, 0, 0, 0.3);
+            --gold: #cc0000;
+            --bg-image: none;
+            background: linear-gradient(135deg, #ffffff, #ffe6e6) !important;
+        }
+
+        /* --- TEMA: LIQUID GLASS ELEGANTE --- */
+        body.theme-liquid-glass {
+            --primary-red: #0a0a0a;
+            --dark-bg: #000000;
+            --text-light: #e0e0e0;
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gold: #88ccff;
+            --bg-image: url('https://i.pinimg.com/736x/d7/07/90/d707903b5b261ef08afb8ab23772d222.jpg');
+        }
+
+        /* --- MODO CLARO --- */
+        body.light-mode {
+            --dark-bg: #f8f9fa;
+            --text-light: #212529;
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
+            --bg-image: none;
+        }
+
+        /* --- DESACTIVAR ANIMACIONES --- */
+        body.no-animations * {
+            animation: none !important;
+            transition: none !important;
+            scroll-behavior: auto !important;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+            transition: background-color 0.4s, color 0.4s;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg), var(--primary-red));
+            background-image: var(--bg-image);
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: var(--text-light);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .fade-in { animation: fadeIn 1s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === BARRA DE NAVEGACIÓN === */
+        nav {
+            position: fixed;
+            top: 0; width: 100%; height: 80px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5%; z-index: 1000;
+            background: rgba(17, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .logo-container { display: flex; align-items: center; gap: 15px; cursor: pointer; text-decoration: none; }
+        .logo-container:hover { transform: scale(1.04); }
+        .perfil-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
+        .logo-text { font-size: 22px; font-weight: bold; letter-spacing: 2px; color: var(--text-light); }
+        
+        .hamburger { display: flex; flex-direction: column; gap: 6px; cursor: pointer; z-index: 1100; }
+        .hamburger span { width: 35px; height: 4px; background-color: var(--text-light); border-radius: 2px; transition: all 0.3s ease; }
+        .hamburger.active span:nth-child(1) { transform: translateY(10px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+
+        .sidebar {
+            position: fixed; top: 0; right: -300px; width: 300px; height: 100vh;
+            background: rgba(20, 0, 0, 0.92); backdrop-filter: blur(20px);
+            border-left: 1px solid var(--glass-border);
+            display: flex; flex-direction: column; padding-top: 100px;
+            transition: right 0.4s ease; z-index: 999;
+        }
+        .sidebar.open { right: 0; }
+        .sidebar a { color: #fff; text-decoration: none; font-size: 20px; padding: 20px 40px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar a:hover { color: var(--gold); background: rgba(255,255,255,0.05); }
+
+        /* === FORMULARIO LAYOUT === */
+        main { padding: 120px 5% 40px; max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+        
+        .form-section {
+            background: var(--glass-bg); backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border); border-radius: 20px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            width: 100%;
+            padding: 40px;
+        }
+
+        .form-header { text-align: center; margin-bottom: 30px; }
+        .form-header i { font-size: 50px; color: var(--gold); margin-bottom: 15px; }
+        .form-header h1 { font-size: 32px; color: var(--text-light); margin-bottom: 10px; }
+        .form-header p { font-size: 16px; color: #ccc; line-height: 1.5; }
+
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; font-size: 14px; color: var(--gold); margin-bottom: 8px; font-weight: bold; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 12px 16px; border-radius: 12px; background: rgba(255,255,255,0.08);
+            border: 1px solid var(--glass-border); color: var(--text-light); outline: none; font-size: 15px;
+            transition: 0.3s;
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--gold); background: rgba(255,255,255,0.12); }
+        .form-group textarea { height: 120px; resize: vertical; }
+
+        .btn-submit {
+            background: var(--gold); color: #111; border: none; padding: 15px 30px;
+            font-size: 16px; font-weight: bold; border-radius: 30px; cursor: pointer; transition: 0.3s;
+            width: 100%; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
+        .btn-submit:hover { opacity: 0.88; transform: scale(1.02); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); }
+
+        /* === MODAL PERSONALIZADO === */
+        .custom-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.82); backdrop-filter: blur(8px); display: none;
+            justify-content: center; align-items: center; z-index: 2500; padding: 20px;
+        }
+        .custom-modal {
+            background: rgba(20, 0, 0, 0.95); backdrop-filter: blur(20px); padding: 35px;
+            border-radius: 20px; border: 1px solid var(--glass-border); max-width: 450px; width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8); color: var(--text-light); text-align: center;
+        }
+        .modal-title { font-size: 24px; margin-bottom: 15px; font-weight: bold; }
+        .btn-modal {
+            background: var(--gold); color: #111; border: none; padding: 12px 25px;
+            font-size: 15px; font-weight: bold; border-radius: 25px; cursor: pointer; transition: 0.3s;
+            width: 100%; margin-top: 20px;
+        }
+        .btn-modal:hover { opacity: 0.88; transform: scale(1.05); }
+
+        /* === BOTÓN Y PANEL DE AJUSTES (Alineado con Inicio) === */
+        .settings-btn {
+            position: fixed; bottom: 30px; right: 30px; width: 55px; height: 55px;
+            background: var(--gold); color: #111; border-radius: 50%; display: flex;
+            justify-content: center; align-items: center; font-size: 22px; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 1500; transition: transform 0.3s;
+        }
+        .settings-btn:hover { transform: rotate(90deg) scale(1.1); }
+
+        .settings-panel {
+            position: fixed; bottom: 95px; right: -350px; width: 300px; padding: 22px;
+            border-radius: 20px; transition: right 0.4s ease; z-index: 1499;
+            background: rgba(10, 10, 10, 0.95); border: 1px solid var(--glass-border);
+        }
+        .settings-panel.open { right: 30px; }
+        .settings-title { color: var(--gold); font-size: 19px; margin-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; text-align: center; }
+        .setting-group { margin-bottom: 18px; }
+        .setting-group label { display: block; margin-bottom: 8px; font-size: 13px; color: #ccc; }
+        
+        .theme-options { display: flex; gap: 10px; justify-content: space-between; }
+        .theme-btn { width: 55px; height: 55px; border-radius: 10px; border: 2px solid transparent; cursor: pointer; object-fit: cover; transition: 0.2s; }
+        .theme-btn:hover, .theme-btn.active { transform: scale(1.1); border-color: var(--gold); }
+
+        select {
+            width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.1);
+            color: #fff; border: 1px solid var(--glass-border); outline: none; cursor: pointer;
+        }
+        option { background: #111; color: #fff; }
+        .switch-container { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; }
+
+        @media (max-width: 768px) {
+            .form-section { padding: 25px 15px; }
+            .form-header h1 { font-size: 26px; }
+            .settings-panel { bottom: 0; height: 100vh; right: -100%; width: 100%; border-radius: 0; }
+            .settings-panel.open { right: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVEGACIÓN -->
+    <nav>
+        <a href="index.html" class="logo-container">
+            <img src="adele_fans.perfil.jpeg" alt="Perfil" class="perfil-img">
+            <span class="logo-text">ADELE_FANS</span>
+        </a>
+        <div class="hamburger" id="hamburger-btn">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+
+    <!-- MENÚ LATERAL -->
+    <div class="sidebar" id="sidebar">
+        <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+        <a href="transmision.html"><i class="fas fa-video"></i> Transmisiones</a>
+        <a href="index.html#galeria" onclick="cerrarMenu()"><i class="fas fa-images"></i> Galeria</a>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL (FORMULARIO) -->
+    <main>
+        <div class="form-section fade-in">
+            <div class="form-header">
+                <i class="fas fa-envelope-open-text"></i>
+                <h1>¿Quieres formar parte de ADELE_FANS?</h1>
+                <p>Únete a miles de Daydreamers. Llena el siguiente formulario para registrarte oficialmente en nuestra comunidad y recibir contenido exclusivo.</p>
+            </div>
+            
+            <form id="registroForm">
+                <div class="form-group">
+                    <label for="nombre">Nombre o Apodo</label>
+                    <input type="text" id="nombre" placeholder="¿Cómo te gusta que te llamen?" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="correo">Correo Electrónico</label>
+                    <input type="email" id="correo" placeholder="Ej: daydreamer@gmail.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="numero">Número Telefónico (Opcional)</label>
+                    <input type="tel" id="numero" placeholder="Con código de área (+52, +34, etc.)">
+                </div>
+
+                <div class="form-group">
+                    <label for="pais">País</label>
+                    <input type="text" id="pais" placeholder="¿Desde dónde nos apoyas?" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="motivo">¿Por qué quieres formar parte de ADELE_FANS?</label>
+                    <textarea id="motivo" placeholder="Cuéntanos qué significa la música de Adele para ti..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Enviar Solicitud</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- PANEL / MODAL DE AJUSTES VISUALES (ENGRANAJE) -->
+    <div class="settings-btn" onclick="toggleSettings()">
+        <i class="fas fa-cog"></i>
+    </div>
+
+    <div class="settings-panel" id="settingsPanel">
+        <h3 class="settings-title"><i class="fas fa-sliders-h"></i> Ajustes</h3>
+        
+        <div class="setting-group">
+            <label>Tema Visual</label>
+            <div class="theme-options">
+                <img src="adele_fans.perfil.jpeg" class="theme-btn active" title="Predeterminado" onclick="cambiarTema('default', this)">
+                <img src="https://i.pinimg.com/736x/6f/12/51/6f1251ff12fd3069b8b22e1ce5eac9c2.jpg" class="theme-btn" title="Rojo y Blanco" onclick="cambiarTema('red-white', this)">
+                <img src="https://i.pinimg.com/736x/d7/07/90/d707903b5b261ef08afb8ab23772d222.jpg" class="theme-btn" title="Liquid Glass" onclick="cambiarTema('liquid-glass', this)">
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <label>Tipografía</label>
+            <select id="fontSelector" onchange="cambiarFuente(this.value)">
+                <option value="'Helvetica Neue', Arial, sans-serif">Moderna (Predeterminada)</option>
+                <option value="'Georgia', serif">Elegante (Serif)</option>
+                <option value="'Courier New', monospace">Retro (Monoespaciada)</option>
+                <option value="cursive">Artística (Cursiva)</option>
+            </select>
+        </div>
+
+        <div class="switch-container">
+            <span><i class="fas fa-sun"></i> Modo Claro</span>
+            <input type="checkbox" id="lightModeToggle" onchange="toggleLightMode(this.checked)" style="transform: scale(1.4); cursor: pointer;">
+        </div>
+
+        <div class="switch-container">
+            <span><i class="fas fa-magic"></i> Animaciones</span>
+            <input type="checkbox" id="animToggle" checked onchange="toggleAnimaciones(this.checked)" style="transform: scale(1.4); cursor: pointer;">
+        </div>
+        
+        <button class="btn-modal" onclick="toggleSettings()" style="width: 100%; margin-top: 15px;">Cerrar Ajustes</button>
+    </div>
+
+    <!-- MODAL DE ALERTAS INTERNAS -->
+    <div class="custom-modal-overlay" id="modalOverlay">
+        <div class="custom-modal" id="modalContenido">
+            <!-- Inyectado por JS -->
+        </div>
+    </div>
+
+    <script>
+        // === INTERFAZ NAVEGACIÓN Y MENÚ ===
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const sidebar = document.getElementById('sidebar');
+
+        hamburgerBtn.addEventListener('click', () => {
+            hamburgerBtn.classList.toggle('active');
+            sidebar.classList.toggle('open');
+        });
+
+        function cerrarMenu() {
+            hamburgerBtn.classList.remove('active');
+            sidebar.classList.remove('open');
+        }
+
+        // === MODAL INTERNO ===
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalContenido = document.getElementById('modalContenido');
+
+        function abrirModalHTML(htmlContent) {
+            modalContenido.innerHTML = htmlContent;
+            modalOverlay.style.display = 'flex';
+        }
+
+        function cerrarModal() {
+            modalOverlay.style.display = 'none';
+        }
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) cerrarModal();
+        });
+
+        // === AJUSTES DE PÁGINA ===
+        const settingsPanel = document.getElementById('settingsPanel');
+
+        function toggleSettings() {
+            settingsPanel.classList.toggle('open');
+            cerrarMenu();
+        }
+
+        function cambiarTema(tema, el) {
+            document.body.classList.remove('theme-red-white', 'theme-liquid-glass');
+            if (tema !== 'default') document.body.classList.add('theme-' + tema);
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            if (el) el.classList.add('active');
+        }
+
+        function cambiarFuente(font) {
+            document.documentElement.style.setProperty('--font-family', font);
+        }
+
+        function toggleLightMode(isLight) {
+            if (isLight) document.body.classList.add('light-mode');
+            else document.body.classList.remove('light-mode');
+        }
+
+        function toggleAnimaciones(isOn) {
+            if (!isOn) document.body.classList.add('no-animations');
+            else document.body.classList.remove('no-animations');
+        }
+
+        // === LÓGICA DEL FORMULARIO Y ENVÍO (FIREBASE + EMAILJS) ===
+        document.getElementById('registroForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Evita que la página se recargue
+
+            // Obtener los datos
+            const nombre = document.getElementById('nombre').value.trim();
+            const correo = document.getElementById('correo').value.trim();
+            const numero = document.getElementById('numero').value.trim();
+            const pais = document.getElementById('pais').value.trim();
+            const motivo = document.getElementById('motivo').value.trim();
+
+            // Modal de "Cargando..."
+            abrirModalHTML(`
+                <h3 class="modal-title" style="color: var(--gold);"><i class="fas fa-spinner fa-spin"></i> Procesando tu registro</h3>
+                <p>Por favor espera un momento mientras enviamos tus datos...</p>
+            `);
+
+            try {
+                // 1. Guardar en Base de Datos (Firebase Firestore)
+                if (window.fb && window.currentUser) {
+                    const { db, appId, collection, addDoc, serverTimestamp } = window.fb;
+                    
+                    // Recuerda la Regla de Rutas: /artifacts/{appId}/public/data/{collectionName}
+                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'registros_comunidad'), {
+                        nombre: nombre,
+                        correo: correo,
+                        numero: numero || 'No especificado',
+                        pais: pais,
+                        motivo: motivo,
+                        userId: window.currentUser.uid,
+                        fechaRegistro: serverTimestamp()
+                    });
+                } else {
+                    console.warn("Firebase no está conectado, pero se intentará enviar el correo de todas formas.");
+                }
+
+                // 2. Enviar Correo de Bienvenida (EmailJS)
+                const templateParams = {
+                    nombre: nombre,
+                    correo: correo,
+                    numero: numero,
+                    pais: pais,
+                    motivo: motivo,
+                    to_email: correo // Usado si tu template de EmailJS lo requiere para mandar al usuario
+                };
+
+                // Llama al servicio con tus credenciales: service_id, template_id, params, public_key
+                await emailjs.send("service_c6zfrcq", "template_nmob6zp", templateParams, "sYfBbpI-VUzpbiuHg");
+
+                // 3. Mostrar Modal de Éxito solicitado en el prompt
+                abrirModalHTML(`
+                    <i class="fas fa-check-circle" style="font-size: 50px; color: #4CAF50; margin-bottom: 15px;"></i>
+                    <h3 class="modal-title" style="color: #4CAF50;">¡Registro Exitoso!</h3>
+                    <p style="font-size: 16px; margin-bottom: 20px;">Gracias por ser parte de la comunidad. Dentro de unos días nos comunicaremos contigo.</p>
+                    <button class="btn-modal" onclick="cerrarModal()">Aceptar</button>
+                `);
+
+                // Limpiar el formulario para un nuevo registro
+                document.getElementById('registroForm').reset();
+
+            } catch (error) {
+                console.error("Error en el registro:", error);
+                abrirModalHTML(`
+                    <i class="fas fa-times-circle" style="font-size: 50px; color: #ff3333; margin-bottom: 15px;"></i>
+                    <h3 class="modal-title" style="color: #ff3333;">Ocurrió un error</h3>
+                    <p style="margin-bottom: 20px;">Lo sentimos, no pudimos procesar tu registro en este momento. Inténtalo más tarde.</p>
+                    <button class="btn-modal" onclick="cerrarModal()">Cerrar</button>
+                `);
+            }
+        });
+    </script>
+</body>
+</html>

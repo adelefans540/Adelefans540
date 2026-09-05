@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADELE_FANS - Inicio</title>
+    
+    <!-- Librería de Iconos para Redes Sociales y Ajustes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* === VARIABLES Y ESTILOS GLOBALES (Tema Predeterminado) === */
+        :root {
+            --primary-red: #660000;
+            --dark-bg: #110000;
+            --text-light: #f5f5f5;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --gold: #d4af37;
+            --font-family: 'Helvetica Neue', Arial, sans-serif;
+            --bg-image: url('tema.jpeg');
+        }
+
+        /* === LOADER CSS === */
+        #loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-bg);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        #loader-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .absolute { position: absolute; }
+        .inline-block { display: inline-block; }
+        .loader { display: flex; margin: 0.25em 0; }
+        .w-2 { width: 0.5em; }
+        .dash { animation: dashArray 2s ease-in-out infinite, dashOffset 2s linear infinite; }
+        .spin { animation: spinDashArray 2s ease-in-out infinite, spin 8s ease-in-out infinite, dashOffset 2s linear infinite; transform-origin: center; }
+        @keyframes dashArray { 0% { stroke-dasharray: 0 1 359 0; } 50% { stroke-dasharray: 0 359 1 0; } 100% { stroke-dasharray: 359 1 0 0; } }
+        @keyframes spinDashArray { 0% { stroke-dasharray: 270 90; } 50% { stroke-dasharray: 0 360; } 100% { stroke-dasharray: 270 90; } }
+        @keyframes dashOffset { 0% { stroke-dashoffset: 365; } 100% { stroke-dashoffset: 5; } }
+        @keyframes spin { 0% { rotate: 0deg; } 12.5%, 25% { rotate: 270deg; } 37.5%, 50% { rotate: 540deg; } 62.5%, 75% { rotate: 810deg; } 87.5%, 100% { rotate: 1080deg; } }
+
+        /* --- TEMA: ROJO Y BLANCO --- */
+        body.theme-red-white {
+            --primary-red: #b30000;
+            --dark-bg: #ffffff;
+            --text-light: #1a1a1a;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(179, 0, 0, 0.3);
+            --gold: #cc0000;
+            --bg-image: none;
+            background: linear-gradient(135deg, #ffffff, #ffe6e6) !important;
+        }
+
+        /* --- TEMA: LIQUID GLASS ELEGANTE --- */
+        body.theme-liquid-glass {
+            --primary-red: #0a0a0a;
+            --dark-bg: #000000;
+            --text-light: #e0e0e0;
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gold: #88ccff;
+            /* Usamos tu imagen proporcionada para el fondo estilo liquid */
+            --bg-image: url('https://i.pinimg.com/736x/d7/07/90/d707903b5b261ef08afb8ab23772d222.jpg');
+        }
+
+        /* --- MODO CLARO (Sobrescribe ligeramente según el tema) --- */
+        body.light-mode {
+            --dark-bg: #f8f9fa;
+            --text-light: #212529;
+            --glass-bg: rgba(255, 255, 255, 0.5);
+            --glass-border: rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
+            --bg-image: none;
+        }
+
+        /* --- DESACTIVAR ANIMACIONES --- */
+        body.no-animations * {
+            animation: none !important;
+            transition: none !important;
+            scroll-behavior: auto !important;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+            transition: background-color 0.4s, color 0.4s; /* Transición suave al cambiar temas */
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg), var(--primary-red));
+            background-image: var(--bg-image);
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: var(--text-light);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* === ANIMACIONES === */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        @keyframes pulse-red {
+            0% { transform: scale(1); box-shadow: 0 0 10px #ff0000; opacity: 1; }
+            50% { transform: scale(1.05); box-shadow: 0 0 25px #ff0000, 0 0 10px #ff0000 inset; opacity: 0.8; }
+            100% { transform: scale(1); box-shadow: 0 0 10px #ff0000; opacity: 1; }
+        }
+
+        .blinking-badge {
+            display: inline-block;
+            background-color: #ff0000;
+            color: #ffffff;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            animation: pulse-red 1.5s infinite;
+        }
+
+        /* === EFECTO GLASSMORPHISM === */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 1200px;
+            width: 90%;
+        }
+
+        /* === BARRA DE NAVEGACIÓN === */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            z-index: 1000;
+            background: rgba(17, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo-container:hover { transform: scale(1.05); }
+
+        .perfil-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--gold);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: var(--text-light);
+        }
+
+        /* Botón Hamburguesa */
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1100;
+        }
+        .hamburger span {
+            width: 35px;
+            height: 4px;
+            background-color: var(--text-light);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        .hamburger.active span:nth-child(1) { transform: translateY(10px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+
+        /* === MENÚ LATERAL === */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(20, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding-top: 100px;
+            transition: right 0.4s ease;
+            z-index: 999;
+        }
+        .sidebar.open { right: 0; }
+        .sidebar a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 20px;
+            padding: 20px 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: color 0.3s, background 0.3s;
+        }
+        .sidebar a:hover { color: var(--gold); background: rgba(255,255,255,0.05); }
+
+        /* === CONTENIDO PRINCIPAL === */
+        main { padding-top: 80px; }
+        .banner {
+            width: 100%;
+            max-height: 60vh;
+            object-fit: cover;
+            display: block;
+            border-bottom: 2px solid var(--gold);
+        }
+        h2 {
+            text-align: center;
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-size: 32px;
+            letter-spacing: 1px;
+        }
+        .about-text { font-size: 18px; line-height: 1.6; text-align: center; }
+
+        /* === CARRUSEL === */
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 20px 0;
+        }
+        .carousel-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 20px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--gold) transparent;
+            scroll-behavior: smooth; /* Movimiento fluido nativo */
+            padding-bottom: 10px;
+        }
+        .carousel-container::-webkit-scrollbar { height: 8px; }
+        .carousel-container::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+        
+        .carousel-item {
+            flex: 0 0 calc(100% - 40px);
+            max-width: 400px;
+            scroll-snap-align: center;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            position: relative;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+        .carousel-item img:hover { transform: scale(1.08); }
+
+        /* === VIDEO === */
+        .video-section { text-align: center; }
+        .video-section img {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 15px;
+            margin-top: 15px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        /* === ÁLBUMES === */
+        .albums-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+        .album-card {
+            background: var(--glass-bg);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+        .album-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            border-color: var(--gold);
+        }
+        .album-card img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .album-title { font-size: 22px; font-weight: bold; color: var(--gold); }
+
+        /* === FOOTER MEJORADO === */
+        footer {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px);
+            border-top: 1px solid var(--glass-border);
+            padding: 50px 20px;
+            text-align: center;
+            margin-top: 60px;
+        }
+        .footer-title {
+            color: var(--gold);
+            font-size: 26px;
+            margin-bottom: 30px;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .social-links a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .social-links a i { font-size: 20px; }
+        
+        /* Colores específicos de redes al hacer hover */
+        .social-links a:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.5); border-color: var(--gold); }
+        .social-links a.tk:hover { background: #000000; color: #fff; }
+        .social-links a.ig:hover { background: #E1306C; color: #fff; }
+        .social-links a.yt:hover { background: #FF0000; color: #fff; }
+        .social-links a.th:hover { background: #000000; color: #fff; }
+        .social-links a.fb:hover { background: #1877F2; color: #fff; }
+        .social-links a.xx:hover { background: #1DA1F2; color: #fff; }
+
+        /* === MODAL PERSONALIZADO (Perfil / Detalles) === */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2500;
+            padding: 20px;
+        }
+        .custom-modal {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 0; /* Sin padding para el banner */
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+            overflow: hidden;
+            color: var(--text-light);
+        }
+        
+        /* Diseño Especial para el Perfil dentro del Modal */
+        .profile-banner {
+            width: 100%;
+            height: 120px;
+            background: url('adele_fans.banner.jpeg') center/cover;
+        }
+        .profile-content {
+            padding: 20px 30px 30px;
+            position: relative;
+        }
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid var(--gold);
+            margin-top: -70px;
+            object-fit: cover;
+            background: #000;
+        }
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px 0;
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .stat-item h4 { color: var(--gold); font-size: 20px; }
+        .stat-item p { font-size: 12px; opacity: 0.8; text-transform: uppercase; }
+
+        .btn-modal {
+            background: var(--gold);
+            color: #111;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+            width: 80%;
+        }
+        .btn-modal:hover { opacity: 0.8; transform: scale(1.05); }
+
+        /* === MENÚ DE AJUSTES (ENGRANAJE) === */
+        .settings-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--gold);
+            color: #111;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            z-index: 1500;
+            transition: transform 0.3s;
+        }
+        .settings-btn:hover { transform: rotate(90deg) scale(1.1); }
+
+        .settings-panel {
+            position: fixed;
+            bottom: 100px;
+            right: -350px;
+            width: 300px;
+            padding: 25px;
+            border-radius: 20px;
+            transition: right 0.4s ease;
+            z-index: 1499;
+            background: rgba(10, 10, 10, 0.95);
+        }
+        .settings-panel.open { right: 30px; }
+        
+        .settings-title {
+            color: var(--gold);
+            font-size: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        .setting-group { margin-bottom: 20px; }
+        .setting-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #ccc;
+        }
+        
+        /* Opciones de Temas (Imágenes) */
+        .theme-options {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+        .theme-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            object-fit: cover;
+            transition: transform 0.2s, border 0.2s;
+        }
+        .theme-btn:hover, .theme-btn.active {
+            transform: scale(1.1);
+            border-color: var(--gold);
+        }
+
+        /* Selectores y Toggles */
+        select, .toggle-btn {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid var(--glass-border);
+            outline: none;
+            cursor: pointer;
+        }
+        option { background: #111; color: #fff; }
+        
+        .switch-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        /* Responsivo adicional */
+        @media (max-width: 768px) {
+            .logo-text { font-size: 18px; }
+            h2 { font-size: 26px; }
+            .carousel-item img { height: 300px; }
+            .settings-panel { bottom: 0; height: 100vh; right: -100%; width: 100%; border-radius: 0; }
+            .settings-panel.open { right: 0; }
+            .settings-btn { bottom: 20px; right: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA DE CARGA (LOADER) -->
+    <div id="loader-overlay">
+        <div class="loader">
+            <svg height="0" width="0" viewBox="0 0 64 64" class="absolute">
+                <defs class="s-xJBuHA073rTt" xmlns="http://www.w3.org/2000/svg">
+                    <linearGradient class="s-xJBuHA073rTt" gradientUnits="userSpaceOnUse" y2="2" x2="0" y1="62" x1="0" id="b">
+                        <stop class="s-xJBuHA073rTt" stop-color="#973BED"></stop>
+                        <stop class="s-xJBuHA073rTt" stop-color="#007CFF" offset="1"></stop>
+                    </linearGradient>
+                    <linearGradient class="s-xJBuHA073rTt" gradientUnits="userSpaceOnUse" y2="0" x2="0" y1="64" x1="0" id="c">
+                        <stop class="s-xJBuHA073rTt" stop-color="#FFC800"></stop>
+                        <stop class="s-xJBuHA073rTt" stop-color="#F0F" offset="1"></stop>
+                        <animateTransform repeatCount="indefinite" keySplines=".42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1;.42,0,.58,1" keyTimes="0; 0.125; 0.25; 0.375; 0.5; 0.625; 0.75; 0.875; 1" dur="8s" values="0 32 32;-270 32 32;-270 32 32;-540 32 32;-540 32 32;-810 32 32;-810 32 32;-1080 32 32;-1080 32 32" type="rotate" attributeName="gradientTransform"></animateTransform>
+                    </linearGradient>
+                    <linearGradient class="s-xJBuHA073rTt" gradientUnits="userSpaceOnUse" y2="2" x2="0" y1="62" x1="0" id="d">
+                        <stop class="s-xJBuHA073rTt" stop-color="#00E0ED"></stop>
+                        <stop class="s-xJBuHA073rTt" stop-color="#00DA72" offset="1"></stop>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <!-- A -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64" height="64" width="64" class="inline-block">
+                <path stroke-linejoin="round" stroke-linecap="round" stroke-width="8" stroke="url(#b)" d="M 32 8 L 12 56 M 32 8 L 52 56 M 20 40 L 44 40" class="dash" pathLength="360"></path>
+            </svg>
+            <div class="w-2"></div>
+            <!-- D -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64" height="64" width="64" class="inline-block">
+                <path stroke-linejoin="round" stroke-linecap="round" stroke-width="8" stroke="url(#c)" d="M 16 8 L 32 8 C 52 8 52 56 32 56 L 16 56 Z" class="dash" pathLength="360"></path>
+            </svg>
+            <div class="w-2"></div>
+            <!-- E -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64" height="64" width="64" class="inline-block">
+                <path stroke-linejoin="round" stroke-linecap="round" stroke-width="8" stroke="url(#d)" d="M 48 8 L 16 8 L 16 56 L 48 56 M 16 32 L 36 32" class="dash" pathLength="360"></path>
+            </svg>
+            <div class="w-2"></div>
+            <!-- L -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64" height="64" width="64" class="inline-block">
+                <path stroke-linejoin="round" stroke-linecap="round" stroke-width="8" stroke="url(#b)" d="M 16 8 L 16 56 L 48 56" class="dash" pathLength="360"></path>
+            </svg>
+            <div class="w-2"></div>
+            <!-- E -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64" height="64" width="64" class="inline-block">
+                <path stroke-linejoin="round" stroke-linecap="round" stroke-width="8" stroke="url(#c)" d="M 48 8 L 16 8 L 16 56 L 48 56 M 16 32 L 36 32" class="dash" pathLength="360"></path>
+            </svg>
+        </div>
+    </div>
+
+    <!-- NAVEGACIÓN -->
+    <nav>
+        <div class="logo-container" onclick="mostrarPerfilAvanzado()">
+            <img src="adele_fans.perfil.jpeg" alt="Perfil de Adele Fans" class="perfil-img">
+            <span class="logo-text">ADELE_FANS</span>
+        </div>
+        
+        <div class="hamburger" id="hamburger-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- MENÚ LATERAL -->
+    <div class="sidebar" id="sidebar">
+        <a href="#" onclick="cerrarMenu()"><i class="fas fa-home"></i> Inicio</a>
+        <a href="comunidad.html" onclick="cerrarMenu()"><i class="fas fa-users"></i>Unete a la comunidad</a>
+        <a href="#galeria" onclick="cerrarMenu()"><i class="fas fa-images"></i> Galería</a>
+        <a href="video.html" onclick="cerrarMenu()"><i class="fas fa-video"></i> Trasmiciones</a>
+        <a href="#albumes" onclick="cerrarMenu()"><i class="fas fa-compact-disc"></i> Álbumes</a>
+    </div>
+
+    <main>
+        <!-- Banner Principal -->
+        <img src="adele_fans.banner.jpeg" alt="Banner Adele Fans" class="banner fade-in">
+
+        <!-- Sección: La Comunidad -->
+        <section id="comunidad" class="glass-panel fade-in">
+            <h2>Nuestra Historia</h2>
+            <p class="about-text">
+                La comunidad de <strong>ADELE_FANS</strong> tiene casi 6 años de existir, siendo un espacio seguro y lleno de amor para celebrar la música, el arte y la vida de Adele. A lo largo de este tiempo, hemos crecido de manera increíble, logrando reunir a aproximadamente <strong>15,000 Daydreamers</strong> sumando todas nuestras redes sociales. ¡Gracias por hacer esto posible y seguir soñando con nosotros!
+            </p>
+        </section>
+
+        <!-- Sección: Carrusel de Galería -->
+        <section id="galeria" class="glass-panel fade-in">
+            <h2>Galería Destacada</h2>
+            <div class="carousel-wrapper">
+                <div class="carousel-container" id="miCarrusel">
+                    <div class="carousel-item"><img src="https://i.pinimg.com/736x/6a/96/06/6a9606e15ac6f8644fc3e7e2b53c29ba.jpg" alt="Adele 1"></div>
+                    <div class="carousel-item"><img src="https://i.pinimg.com/1200x/73/f5/2f/73f52f9fe5cbccfb8e55e6781ec98676.jpg" alt="Adele 2"></div>
+                    <div class="carousel-item"><img src="https://i.pinimg.com/736x/59/81/30/5981308e8651886a8b66e06373ad2d24.jpg" alt="Adele 3"></div>
+                    <div class="carousel-item"><img src="https://i.pinimg.com/736x/11/da/6e/11da6eaef99b934af25089a9aeafd4c9.jpg" alt="Adele 4"></div>
+                    <div class="carousel-item"><img src="https://i.pinimg.com/736x/04/c3/22/04c322739511ad84703ce203f2bf2503.jpg" alt="Adele 5"></div>
+                    <div class="carousel-item"><img src="https://i.pinimg.com/1200x/49/b0/92/49b092a86c68e8947d29aa1cc5345a05.jpg" alt="Adele 6"></div>
+                    <div class="carousel-item"><img src="https://i.pinimg.com/736x/4c/ef/c6/4cefc6bae895e077f92f9b1faa1e2d3f.jpg" alt="Adele 7"></div>
+                    <div class="carousel-item"><img src="https://i.pinimg.com/1200x/77/93/3e/77933e464413eb11ad3132eb3f665871.jpg" alt="Adele 8"></div>
+                    <div class="carousel-item"><img src="https://i.pinimg.com/1200x/1a/e0/d5/1ae0d5fd1cff3d769f75d18a5e3e7ed5.jpg" alt="Adele 9"></div>
+                    <div class="carousel-item"><img src="https://i.pinimg.com/236x/18/98/d8/1898d88482989672bed839b4f929a141.jpg" alt="Adele 10"></div>
+                    <div class="carousel-item"><img src="https://i.pinimg.com/736x/97/2f/62/972f627fc5fe9afb53d030e813332213.jpg" alt="Adele 11"></div>
+                    <div class="carousel-item"><img src="https://i.pinimg.com/736x/2b/f3/c8/2bf3c837397e3aeffb99e677fcff46ac.jpg" alt="Adele 12"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección: Video Próximamente -->
+       <section id="video" class="glass-panel video-section fade-in">
+    <div class="blinking-badge"><i class="fas fa-circle"></i> Próximamente</div>
+    <h2>Transmisión Especial</h2>
+    <p style="margin-bottom: 20px;">Mantente atento a nuestras próximas transmisiones y contenido exclusivo en vivo.</p>
+    
+    <!-- Imagen que se muestra primero -->
+    <img id="imagen-previa" src="audience-whit-adele.jpeg" alt="An Audience With Adele">
+    
+    <!-- Video oculto inicialmente -->
+    <video id="video-principal" autoplay muted controls style="display: none; width: 100%; max-width: 800px; border-radius: 15px; margin-top: 15px; border: 1px solid var(--glass-border); box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
+    <source src="An-Audience-With-Adele.mp4" type="video/mp4">
+    Tu navegador no soporta el reproductor de video.
+</video>
+</section>
+
+        <!-- Sección: Álbumes -->
+        <section id="albumes" class="glass-panel fade-in">
+            <h2>Álbums</h2>
+            <div class="albums-grid">
+                <div class="album-card" onclick="mostrarInfoAlbum('Era 19 (2008)', 'Su álbum debut que introdujo su voz única al mundo con géneros de soul e indie pop. Éxitos: Chasing Pavements, Hometown Glory.', 'https://i.pinimg.com/736x/b0/10/04/b01004feb7871f6e82a449ca1b75174c.jpg')">
+                    <img src="https://i.pinimg.com/736x/b0/10/04/b01004feb7871f6e82a449ca1b75174c.jpg" alt="Álbum 19">
+                    <div class="album-title">19</div>
+                </div>
+                <div class="album-card" onclick="mostrarInfoAlbum('Era 21 (2011)', 'El fenómeno global que rompió todos los récords. Un álbum desgarrador y perfecto. Éxitos: Rolling in the Deep, Someone Like You.', 'https://i.pinimg.com/736x/26/c5/e6/26c5e676a5abd1d9e278540b39f53cee.jpg')">
+                    <img src="https://i.pinimg.com/736x/26/c5/e6/26c5e676a5abd1d9e278540b39f53cee.jpg" alt="Álbum 21">
+                    <div class="album-title">21</div>
+                </div>
+                <div class="album-card" onclick="mostrarInfoAlbum('Era 25 (2015)', 'El triunfal regreso musical que paralizó la industria. Nostalgia pura. Éxitos: Hello, When We Were Young.', 'https://i.pinimg.com/1200x/86/7f/50/867f5007fb33873fcb26c9db9d940720.jpg')">
+                    <img src="https://i.pinimg.com/1200x/86/7f/50/867f5007fb33873fcb26c9db9d940720.jpg" alt="Álbum 25">
+                    <div class="album-title">25</div>
+                </div>
+                <div class="album-card" onclick="mostrarInfoAlbum('Era 30 (2021)', 'Un álbum profundo, maduro y sanador sobre su proceso de divorcio. Éxitos: Easy On Me, Oh My God.', 'https://i.pinimg.com/736x/65/c8/f9/65c8f913ee368554047f057045f86474.jpg')">
+                    <img src="https://i.pinimg.com/736x/65/c8/f9/65c8f913ee368554047f057045f86474.jpg" alt="Álbum 30">
+                    <div class="album-title">30</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- PIE DE PÁGINA CON ICONOS -->
+    <footer>
+        <h3 class="footer-title">Únete a la Familia Daydreamer</h3>
+        <div class="social-links">
+            <a href="https://www.tiktok.com/@adele_fans542?_r=1&_t=zs-999o2vlqd88" target="_blank" class="tk"><i class="fab fa-tiktok"></i> TikTok</a>
+            <a href="https://www.instagram.com/adele_fans540?utm_source=ig_web_button_share_sheet&igsi=ZDNlZDc0MzIxNw==" target="_blank" class="ig"><i class="fab fa-instagram"></i> Instagram</a>
+            <a href="https://youtube.com/@adele_fans540?si=RrqGesxQK05S6-A0" target="_blank" class="yt"><i class="fab fa-youtube"></i> YouTube</a>
+            <a href="https://www.threads.com/@adele_fans540" target="_blank" class="th"><i class="fa-brands fa-threads"></i> Threads</a>
+            <a href="https://www.facebook.com/adele.daydreamer.2025/about_overview" target="_blank" class="fb"><i class="fab fa-facebook-f"></i> Facebook</a>
+            <a href="https://x.com/adele_fans540?s=11" target="_blank" class="xx"><i class="fab fa-x-twitter"></i> X (Twitter)</a>
+        </div>
+    </footer>
+
+    <!-- BOTÓN Y PANEL DE AJUSTES -->
+    <div class="settings-btn" onclick="toggleSettings()">
+        <i class="fas fa-cog"></i>
+    </div>
+
+    <div class="settings-panel glass-panel" id="settingsPanel">
+        <h3 class="settings-title"><i class="fas fa-sliders-h"></i> Ajustes de Página</h3>
+        
+        <!-- Temas -->
+        <div class="setting-group">
+            <label>Tema Visual</label>
+            <div class="theme-options">
+                <img src="adele_fans.perfil.jpeg" class="theme-btn active" title="Predeterminado" onclick="cambiarTema('default', this)">
+                <img src="https://i.pinimg.com/736x/6f/12/51/6f1251ff12fd3069b8b22e1ce5eac9c2.jpg" class="theme-btn" title="Rojo y Blanco" onclick="cambiarTema('red-white', this)">
+                <img src="https://i.pinimg.com/736x/d7/07/90/d707903b5b261ef08afb8ab23772d222.jpg" class="theme-btn" title="Liquid Glass" onclick="cambiarTema('liquid-glass', this)">
+            </div>
+        </div>
+
+        <!-- Tipografía -->
+        <div class="setting-group">
+            <label>Tipografía</label>
+            <select id="fontSelector" onchange="cambiarFuente(this.value)">
+                <option value="'Helvetica Neue', Arial, sans-serif">Moderna (Predeterminada)</option>
+                <option value="'Georgia', serif">Elegante (Serif)</option>
+                <option value="'Courier New', monospace">Retro (Monoespaciada)</option>
+                <option value="cursive">Artística (Cursiva)</option>
+            </select>
+        </div>
+
+        <!-- Modo Oscuro / Claro -->
+        <div class="switch-container">
+            <span><i class="fas fa-sun"></i> Modo Claro</span>
+            <input type="checkbox" id="lightModeToggle" onchange="toggleLightMode(this.checked)" style="transform: scale(1.5); cursor: pointer;">
+        </div>
+
+        <!-- Animaciones -->
+        <div class="switch-container">
+            <span><i class="fas fa-magic"></i> Animaciones</span>
+            <input type="checkbox" id="animToggle" checked onchange="toggleAnimaciones(this.checked)" style="transform: scale(1.5); cursor: pointer;">
+        </div>
+        
+        <button class="btn-modal" onclick="toggleSettings()" style="width: 100%; margin-top: 20px;">Cerrar Ajustes</button>
+    </div>
+
+    <!-- MODAL PERSONALIZADO REUTILIZABLE -->
+    <div class="custom-modal-overlay" id="modalOverlay">
+        <div class="custom-modal">
+            <div id="modalMensaje"></div>
+        </div>
+    </div>
+
+    <script>
+        // === SCRIPT DEL LOADER DE INICIO ===
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader-overlay').classList.add('hidden');
+            }, 1800); // 1.8 segundos para apreciar la animación completa
+        });
+
+        // === INTERFAZ DE NAVEGACIÓN ===
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const sidebar = document.getElementById('sidebar');
+
+        hamburgerBtn.addEventListener('click', () => {
+            hamburgerBtn.classList.toggle('active'); 
+            sidebar.classList.toggle('open');       
+        });
+
+        function cerrarMenu() {
+            hamburgerBtn.classList.remove('active');
+            sidebar.classList.remove('open');
+        }
+
+        // === LÓGICA DEL CARRUSEL (Más fluido) ===
+        const carrusel = document.getElementById('miCarrusel');
+        let carruselInterval;
+        let isHovering = false;
+
+        function iniciarCarrusel() {
+            carruselInterval = setInterval(() => {
+                if (!isHovering) {
+                    const maxScroll = carrusel.scrollWidth - carrusel.clientWidth;
+                    if (carrusel.scrollLeft >= maxScroll - 5) {
+                        carrusel.scrollTo({ left: 0, behavior: 'smooth' });
+                    } else {
+                        // Calcula el ancho de un elemento dinámicamente
+                        const itemWidth = carrusel.querySelector('.carousel-item').offsetWidth + 20;
+                        carrusel.scrollBy({ left: itemWidth, behavior: 'smooth' });
+                    }
+                }
+            }, 3000);
+        }
+
+        carrusel.addEventListener('mouseenter', () => isHovering = true);
+        carrusel.addEventListener('mouseleave', () => isHovering = false);
+        carrusel.addEventListener('touchstart', () => isHovering = true);
+        carrusel.addEventListener('touchend', () => setTimeout(() => isHovering = false, 1500));
+        
+        iniciarCarrusel();
+
+        // === MODAL PERSONALIZADO (CERO ALERTAS DEL NAVEGADOR) ===
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalMensaje = document.getElementById('modalMensaje');
+
+        function abrirModal(htmlContent) {
+            modalMensaje.innerHTML = htmlContent;
+            modalOverlay.style.display = 'flex';
+        }
+
+        function cerrarAlerta() {
+            modalOverlay.style.display = 'none';
+        }
+
+        // Cerrar modal al hacer clic fuera del cuadro
+        modalOverlay.addEventListener('click', function(e) {
+            if(e.target === modalOverlay) cerrarAlerta();
+        });
+
+        // --- PERFIL AVANZADO ---
+        function mostrarPerfilAvanzado() {
+            const perfilHTML = `
+                <div class="profile-banner"></div>
+                <div class="profile-content">
+                    <img src="adele_fans.perfil.jpeg" class="profile-avatar" alt="Avatar">
+                    <h3 style="color: var(--gold); margin: 10px 0; font-size: 26px;">ADELE_FANS 540</h3>
+                    <p style="font-size: 15px;">Comunidad Oficial de Daydreamers en Español.</p>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <h4>+15K</h4>
+                            <p>Seguidores</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4>6</h4>
+                            <p>Años Activos</p>
+                        </div>
+                    </div>
+                    
+                    <p style="font-size: 14px; margin-bottom: 20px;">¡Sigue explorando nuestra web o únete a nuestras redes para contenido diario, traducciones y noticias exclusivas de Adele!</p>
+                    <button class="btn-modal" onclick="cerrarAlerta()">Entendido</button>
+                </div>
+            `;
+            abrirModal(perfilHTML);
+        }
+
+        // --- INFO DE ÁLBUMES ---
+        function mostrarInfoAlbum(titulo, descripcion, imgUrl) {
+            const albumHTML = `
+                <div style="padding: 30px;">
+                    <img src="${imgUrl}" style="width: 150px; height: 150px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
+                    <h3 style="color: var(--gold); margin-bottom: 15px; font-size: 26px;">${titulo}</h3>
+                    <p style="text-align: justify; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">${descripcion}</p>
+                    <button class="btn-modal" onclick="cerrarAlerta()">Cerrar</button>
+                </div>
+            `;
+            abrirModal(albumHTML);
+        }
+
+        // === AJUSTES DE PÁGINA (Funcionan de verdad) ===
+        const settingsPanel = document.getElementById('settingsPanel');
+
+        function toggleSettings() {
+            settingsPanel.classList.toggle('open');
+            // Cierra el menú hamburguesa si estaba abierto para no superponerse
+            cerrarMenu();
+        }
+
+        // 1. Cambiar Tema Visual
+        function cambiarTema(tema, elementoBoton) {
+            // Quitar clases previas
+            document.body.classList.remove('theme-red-white', 'theme-liquid-glass');
+            
+            if (tema !== 'default') {
+                document.body.classList.add('theme-' + tema);
+            }
+
+            // Efecto visual en los botones
+            const botones = document.querySelectorAll('.theme-btn');
+            botones.forEach(btn => btn.classList.remove('active'));
+            elementoBoton.classList.add('active');
+        }
+
+        // 2. Cambiar Fuente
+        function cambiarFuente(font) {
+            document.documentElement.style.setProperty('--font-family', font);
+        }
+
+        // 3. Modo Claro / Oscuro
+        function toggleLightMode(isLight) {
+            if(isLight) {
+                document.body.classList.add('light-mode');
+            } else {
+                document.body.classList.remove('light-mode');
+            }
+        }
+
+        // 4. Activar / Desactivar Animaciones
+        function toggleAnimaciones(isOn) {
+            if(!isOn) {
+                document.body.classList.add('no-animations');
+                clearInterval(carruselInterval); // Detiene el carrusel
+            } else {
+                document.body.classList.remove('no-animations');
+                iniciarCarrusel(); // Reinicia el carrusel
+            }
+        }
+       window.addEventListener('load', () => {
+    const imagen = document.getElementById('imagen-previa');
+    const video = document.getElementById('video-principal');
+    const tiempoImagen = 15000; // 5000 = 5 segundos
+
+    // Función que controla el ciclo de mostrar imagen y luego video
+    function iniciarCiclo() {
+        // 1. Mostrar la imagen y ocultar el video
+        imagen.style.display = 'inline-block';
+        video.style.display = 'none';
+
+        // 2. Esperar 5 segundos para hacer el cambio
+        setTimeout(() => {
+            imagen.style.display = 'none';
+            video.style.display = 'inline-block';
+            
+            video.currentTime = 0; // Regresa el video al inicio
+            video.play();          // Reproduce el video automáticamente
+        }, tiempoImagen);
+    }
+
+    if (imagen && video) {
+        // Iniciar el primer ciclo al cargar la página
+        iniciarCiclo();
+
+        // 3. Detectar cuando el video termina para repetir el proceso
+        video.addEventListener('ended', () => {
+            iniciarCiclo();
+        });
+    }
+});
+    </script>
+</body>
+</html>
