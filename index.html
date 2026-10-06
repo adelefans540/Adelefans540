@@ -8,47 +8,104 @@
     <!-- Librería de Iconos para Redes Sociales y Ajustes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Fuentes de Google para la Tipografía Estilizada (Cinema / Halloween) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+
     <style>
-        /* === VARIABLES Y ESTILOS GLOBALES (Tema Predeterminado) === */
+        /* === VARIABLES Y ESTILOS GLOBALES (Tema Predeterminado: HALLOWEEN) === */
         :root {
+            --primary-red: #e65c00;
+            --dark-bg: #0d0400;
+            --text-light: #f5f5f5;
+            --glass-bg: rgba(25, 10, 0, 0.55);
+            --glass-border: rgba(255, 119, 0, 0.35);
+            --gold: #ff7700;
+            --font-family: 'Playfair Display', 'Cinzel Decorative', Georgia, serif;
+            --bg-image: url('halloween-fondo.jpg');
+        }
+
+        /* === LOADER CSS (Temática de Halloween) === */
+:root {
+    --halloween-bg: #120516;      /* Fondo morado casi negro */
+    --halloween-orange: #ff6a00;  /* Naranja calabaza */
+    --halloween-purple: #9d00ff;  /* Morado espectral */
+    --halloween-green: #39ff14;   /* Verde tóxico (brillo) */
+}
+
+#loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--halloween-bg); /* Aplicamos el fondo oscuro */
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#loader-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.absolute { position: absolute; }
+.inline-block { display: inline-block; }
+
+.loader { 
+    display: flex; 
+    margin: 0.25em 0; 
+    /* Brillo tenue alrededor del loader */
+    filter: drop-shadow(0 0 8px var(--halloween-orange));
+}
+
+.w-2 { width: 0.5em; }
+
+/* Asignamos los colores a los trazos (strokes) de la animación SVG */
+.dash { 
+    stroke: var(--halloween-orange); 
+    animation: dashArray 2s ease-in-out infinite, dashOffset 2s linear infinite; 
+}
+
+.spin { 
+    stroke: var(--halloween-purple); 
+    animation: spinDashArray 2s ease-in-out infinite, spin 8s ease-in-out infinite, dashOffset 2s linear infinite; 
+    transform-origin: center; 
+}
+
+/* Animaciones originales */
+@keyframes dashArray { 0% { stroke-dasharray: 0 1 359 0; } 50% { stroke-dasharray: 0 359 1 0; } 100% { stroke-dasharray: 359 1 0 0; } }
+@keyframes spinDashArray { 0% { stroke-dasharray: 270 90; } 50% { stroke-dasharray: 0 360; } 100% { stroke-dasharray: 270 90; } }
+@keyframes dashOffset { 0% { stroke-dashoffset: 365; } 100% { stroke-dashoffset: 5; } }
+@keyframes spin { 0% { rotate: 0deg; } 12.5%, 25% { rotate: 270deg; } 37.5%, 50% { rotate: 540deg; } 62.5%, 75% { rotate: 810deg; } 87.5%, 100% { rotate: 1080deg; } }
+
+        /* --- TEMA: HALLOWEEN (Predeterminado) --- */
+        body.theme-halloween {
+            --primary-red: #e65c00;
+            --dark-bg: #0d0400;
+            --text-light: #f5f5f5;
+            --glass-bg: rgba(25, 10, 0, 0.55);
+            --glass-border: rgba(255, 119, 0, 0.35);
+            --gold: #ff7700;
+            --bg-image: url('halloween-fondo.jpg');
+            background: linear-gradient(135deg, #0d0400, #2b0f00) !important;
+        }
+
+        /* --- TEMA: CLÁSICO / ORIGINAL --- */
+        body.theme-default {
             --primary-red: #660000;
             --dark-bg: #110000;
             --text-light: #f5f5f5;
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.2);
             --gold: #d4af37;
-            --font-family: 'Helvetica Neue', Arial, sans-serif;
             --bg-image: url('tema.jpeg');
+            background: linear-gradient(135deg, #110000, #660000) !important;
         }
-
-        /* === LOADER CSS === */
-        #loader-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--dark-bg);
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.6s ease, visibility 0.6s ease;
-        }
-        #loader-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-        .absolute { position: absolute; }
-        .inline-block { display: inline-block; }
-        .loader { display: flex; margin: 0.25em 0; }
-        .w-2 { width: 0.5em; }
-        .dash { animation: dashArray 2s ease-in-out infinite, dashOffset 2s linear infinite; }
-        .spin { animation: spinDashArray 2s ease-in-out infinite, spin 8s ease-in-out infinite, dashOffset 2s linear infinite; transform-origin: center; }
-        @keyframes dashArray { 0% { stroke-dasharray: 0 1 359 0; } 50% { stroke-dasharray: 0 359 1 0; } 100% { stroke-dasharray: 359 1 0 0; } }
-        @keyframes spinDashArray { 0% { stroke-dasharray: 270 90; } 50% { stroke-dasharray: 0 360; } 100% { stroke-dasharray: 270 90; } }
-        @keyframes dashOffset { 0% { stroke-dashoffset: 365; } 100% { stroke-dashoffset: 5; } }
-        @keyframes spin { 0% { rotate: 0deg; } 12.5%, 25% { rotate: 270deg; } 37.5%, 50% { rotate: 540deg; } 62.5%, 75% { rotate: 810deg; } 87.5%, 100% { rotate: 1080deg; } }
 
         /* --- TEMA: ROJO Y BLANCO --- */
         body.theme-red-white {
@@ -70,16 +127,29 @@
             --glass-bg: rgba(255, 255, 255, 0.02);
             --glass-border: rgba(255, 255, 255, 0.1);
             --gold: #88ccff;
-            /* Usamos tu imagen proporcionada para el fondo estilo liquid */
             --bg-image: url('https://i.pinimg.com/736x/d7/07/90/d707903b5b261ef08afb8ab23772d222.jpg');
+            background: #000000 !important;
         }
 
-        /* --- MODO CLARO (Sobrescribe ligeramente según el tema) --- */
+        /* --- MODO CLARO (Soporte dinámico según el tema activo) --- */
         body.light-mode {
+            --dark-bg: #fff0e6;
+            --text-light: #1a0800;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(230, 92, 0, 0.4);
+            --gold: #d95300;
+            background: linear-gradient(135deg, #fff0e6, #ffd8b3) !important;
+            --bg-image: none;
+        }
+
+        body.theme-default.light-mode,
+        body.theme-red-white.light-mode,
+        body.theme-liquid-glass.light-mode {
             --dark-bg: #f8f9fa;
             --text-light: #212529;
-            --glass-bg: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.85);
             --glass-border: rgba(0, 0, 0, 0.15);
+            --gold: #cc0000;
             background: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
             --bg-image: none;
         }
@@ -96,7 +166,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: var(--font-family);
-            transition: background-color 0.4s, color 0.4s; /* Transición suave al cambiar temas */
+            transition: background-color 0.4s, color 0.4s;
         }
 
         body {
@@ -121,15 +191,15 @@
         }
 
         @keyframes pulse-red {
-            0% { transform: scale(1); box-shadow: 0 0 10px #ff0000; opacity: 1; }
-            50% { transform: scale(1.05); box-shadow: 0 0 25px #ff0000, 0 0 10px #ff0000 inset; opacity: 0.8; }
-            100% { transform: scale(1); box-shadow: 0 0 10px #ff0000; opacity: 1; }
+            0% { transform: scale(1); box-shadow: 0 0 10px var(--gold); opacity: 1; }
+            50% { transform: scale(1.05); box-shadow: 0 0 25px var(--gold), 0 0 10px var(--gold) inset; opacity: 0.8; }
+            100% { transform: scale(1); box-shadow: 0 0 10px var(--gold); opacity: 1; }
         }
 
         .blinking-badge {
             display: inline-block;
-            background-color: #ff0000;
-            color: #ffffff;
+            background-color: var(--gold);
+            color: #000000;
             padding: 8px 20px;
             border-radius: 30px;
             font-weight: bold;
@@ -147,7 +217,7 @@
             -webkit-backdrop-filter: blur(15px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
             padding: 30px;
             margin: 20px auto;
             max-width: 1200px;
@@ -165,7 +235,7 @@
             align-items: center;
             padding: 0 5%;
             z-index: 1000;
-            background: rgba(17, 0, 0, 0.6);
+            background: rgba(13, 4, 0, 0.75);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--glass-border);
         }
@@ -186,6 +256,7 @@
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--gold);
+            transition: src 0.3s ease;
         }
 
         .logo-text {
@@ -221,7 +292,7 @@
             right: -300px;
             width: 300px;
             height: 100vh;
-            background: rgba(20, 0, 0, 0.85);
+            background: rgba(13, 4, 0, 0.92);
             backdrop-filter: blur(20px);
             border-left: 1px solid var(--glass-border);
             display: flex;
@@ -249,6 +320,7 @@
             object-fit: cover;
             display: block;
             border-bottom: 2px solid var(--gold);
+            transition: src 0.3s ease;
         }
         h2 {
             text-align: center;
@@ -273,7 +345,7 @@
             gap: 20px;
             scrollbar-width: thin;
             scrollbar-color: var(--gold) transparent;
-            scroll-behavior: smooth; /* Movimiento fluido nativo */
+            scroll-behavior: smooth;
             padding-bottom: 10px;
         }
         .carousel-container::-webkit-scrollbar { height: 8px; }
@@ -340,7 +412,7 @@
 
         /* === FOOTER MEJORADO === */
         footer {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(15px);
             border-top: 1px solid var(--glass-border);
             padding: 50px 20px;
@@ -376,7 +448,6 @@
         }
         .social-links a i { font-size: 20px; }
         
-        /* Colores específicos de redes al hacer hover */
         .social-links a:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.5); border-color: var(--gold); }
         .social-links a.tk:hover { background: #000000; color: #fff; }
         .social-links a.ig:hover { background: #E1306C; color: #fff; }
@@ -403,7 +474,7 @@
         .custom-modal {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
-            padding: 0; /* Sin padding para el banner */
+            padding: 0;
             border-radius: 20px;
             text-align: center;
             border: 1px solid var(--glass-border);
@@ -414,11 +485,11 @@
             color: var(--text-light);
         }
         
-        /* Diseño Especial para el Perfil dentro del Modal */
         .profile-banner {
             width: 100%;
             height: 120px;
-            background: url('adele_fans.banner.jpeg') center/cover;
+            background-position: center;
+            background-size: cover;
         }
         .profile-content {
             padding: 20px 30px 30px;
@@ -457,7 +528,7 @@
             margin-top: 15px;
             width: 80%;
         }
-        .btn-modal:hover { opacity: 0.8; transform: scale(1.05); }
+        .btn-modal:hover { opacity: 0.85; transform: scale(1.05); }
 
         /* === MENÚ DE AJUSTES (ENGRANAJE) === */
         .settings-btn {
@@ -517,8 +588,8 @@
             justify-content: space-between;
         }
         .theme-btn {
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            height: 55px;
             border-radius: 10px;
             border: 2px solid transparent;
             cursor: pointer;
@@ -564,7 +635,7 @@
         }
     </style>
 </head>
-<body>
+<body class="theme-halloween">
 
     <!-- PANTALLA DE CARGA (LOADER) -->
     <div id="loader-overlay">
@@ -616,7 +687,7 @@
     <!-- NAVEGACIÓN -->
     <nav>
         <div class="logo-container" onclick="mostrarPerfilAvanzado()">
-            <img src="adele_fans.perfil.jpeg" alt="Perfil de Adele Fans" class="perfil-img">
+            <img src="halloween-logo.jpeg" alt="Perfil de Adele Fans" class="perfil-img" id="nav-logo">
             <span class="logo-text">ADELE_FANS</span>
         </div>
         
@@ -630,15 +701,15 @@
     <!-- MENÚ LATERAL -->
     <div class="sidebar" id="sidebar">
         <a href="#" onclick="cerrarMenu()"><i class="fas fa-home"></i> Inicio</a>
-        <a href="comunidad.html" onclick="cerrarMenu()"><i class="fas fa-users"></i>Unete a la comunidad</a>
+        <a href="comunidad.html" onclick="cerrarMenu()"><i class="fas fa-users"></i> Unete a la comunidad</a>
         <a href="#galeria" onclick="cerrarMenu()"><i class="fas fa-images"></i> Galería</a>
-        <a href="video.html" onclick="cerrarMenu()"><i class="fas fa-video"></i> Trasmiciones</a>
+        <a href="video.html" onclick="cerrarMenu()"><i class="fas fa-video"></i> Transmisiones</a>
         <a href="#albumes" onclick="cerrarMenu()"><i class="fas fa-compact-disc"></i> Álbumes</a>
     </div>
 
     <main>
         <!-- Banner Principal -->
-        <img src="adele_fans.banner.jpeg" alt="Banner Adele Fans" class="banner fade-in">
+        <img src="halloween-banner.jpg" alt="Banner Adele Fans" class="banner fade-in" id="main-banner">
 
         <!-- Sección: La Comunidad -->
         <section id="comunidad" class="glass-panel fade-in">
@@ -670,20 +741,20 @@
         </section>
 
         <!-- Sección: Video Próximamente -->
-       <section id="video" class="glass-panel video-section fade-in">
-    <div class="blinking-badge"><i class="fas fa-circle"></i> Próximamente</div>
-    <h2>Transmisión Especial</h2>
-    <p style="margin-bottom: 20px;">Mantente atento a nuestras próximas transmisiones y contenido exclusivo en vivo.</p>
-    
-    <!-- Imagen que se muestra primero -->
-    <img id="imagen-previa" src="audience-whit-adele.jpeg" alt="An Audience With Adele">
-    
-    <!-- Video oculto inicialmente -->
-    <video id="video-principal" autoplay muted controls style="display: none; width: 100%; max-width: 800px; border-radius: 15px; margin-top: 15px; border: 1px solid var(--glass-border); box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
-    <source src="An-Audience-With-Adele.mp4" type="video/mp4">
-    Tu navegador no soporta el reproductor de video.
-</video>
-</section>
+        <section id="video" class="glass-panel video-section fade-in">
+            <div class="blinking-badge"><i class="fas fa-circle"></i> Próximamente</div>
+            <h2>Transmisión Especial</h2>
+            <p style="margin-bottom: 20px;">Mantente atento a nuestras próximas transmisiones y contenido exclusivo en vivo.</p>
+            
+            <!-- Imagen que se muestra primero -->
+            <img id="imagen-previa" src="audience-whit-adele.jpeg" alt="An Audience With Adele">
+            
+            <!-- Video oculto inicialmente -->
+            <video id="video-principal" autoplay muted controls style="display: none; width: 100%; max-width: 800px; border-radius: 15px; margin-top: 15px; border: 1px solid var(--glass-border); box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
+                <source src="An-Audience-With-Adele.mp4" type="video/mp4">
+                Tu navegador no soporta el reproductor de video.
+            </video>
+        </section>
 
         <!-- Sección: Álbumes -->
         <section id="albumes" class="glass-panel fade-in">
@@ -730,11 +801,12 @@
     <div class="settings-panel glass-panel" id="settingsPanel">
         <h3 class="settings-title"><i class="fas fa-sliders-h"></i> Ajustes de Página</h3>
         
-        <!-- Temas -->
+        <!-- Temas Visuales -->
         <div class="setting-group">
             <label>Tema Visual</label>
             <div class="theme-options">
-                <img src="adele_fans.perfil.jpeg" class="theme-btn active" title="Predeterminado" onclick="cambiarTema('default', this)">
+                <img src="halloween-logo.jpeg" class="theme-btn active" title="Halloween (Predeterminado)" onclick="cambiarTema('halloween', this)">
+                <img src="adele_fans.perfil.jpeg" class="theme-btn" title="Clásico Original" onclick="cambiarTema('default', this)">
                 <img src="https://i.pinimg.com/736x/6f/12/51/6f1251ff12fd3069b8b22e1ce5eac9c2.jpg" class="theme-btn" title="Rojo y Blanco" onclick="cambiarTema('red-white', this)">
                 <img src="https://i.pinimg.com/736x/d7/07/90/d707903b5b261ef08afb8ab23772d222.jpg" class="theme-btn" title="Liquid Glass" onclick="cambiarTema('liquid-glass', this)">
             </div>
@@ -744,8 +816,9 @@
         <div class="setting-group">
             <label>Tipografía</label>
             <select id="fontSelector" onchange="cambiarFuente(this.value)">
-                <option value="'Helvetica Neue', Arial, sans-serif">Moderna (Predeterminada)</option>
-                <option value="'Georgia', serif">Elegante (Serif)</option>
+                <option value="'Playfair Display', 'Cinzel Decorative', Georgia, serif">Elegante Serif (Predeterminada)</option>
+                <option value="'Helvetica Neue', Arial, sans-serif">Moderna (Sans-Serif)</option>
+                <option value="'Georgia', serif">Clásica (Serif)</option>
                 <option value="'Courier New', monospace">Retro (Monoespaciada)</option>
                 <option value="cursive">Artística (Cursiva)</option>
             </select>
@@ -774,11 +847,37 @@
     </div>
 
     <script>
+        // Mapeo de recursos activos por tema
+        const themeAssets = {
+            'halloween': {
+                logo: 'halloween-logo.jpeg',
+                banner: 'halloween-banner.jpg',
+                font: "'Playfair Display', 'Cinzel Decorative', Georgia, serif"
+            },
+            'default': {
+                logo: 'adele_fans.perfil.jpeg',
+                banner: 'adele_fans.banner.jpeg',
+                font: "'Helvetica Neue', Arial, sans-serif"
+            },
+            'red-white': {
+                logo: 'adele_fans.perfil.jpeg',
+                banner: 'adele_fans.banner.jpeg',
+                font: "'Helvetica Neue', Arial, sans-serif"
+            },
+            'liquid-glass': {
+                logo: 'adele_fans.perfil.jpeg',
+                banner: 'adele_fans.banner.jpeg',
+                font: "'Helvetica Neue', Arial, sans-serif"
+            }
+        };
+
+        let activeThemeKey = 'halloween';
+
         // === SCRIPT DEL LOADER DE INICIO ===
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.getElementById('loader-overlay').classList.add('hidden');
-            }, 1800); // 1.8 segundos para apreciar la animación completa
+            }, 1800);
         });
 
         // === INTERFAZ DE NAVEGACIÓN ===
@@ -795,7 +894,7 @@
             sidebar.classList.remove('open');
         }
 
-        // === LÓGICA DEL CARRUSEL (Más fluido) ===
+        // === LÓGICA DEL CARRUSEL (Fluido) ===
         const carrusel = document.getElementById('miCarrusel');
         let carruselInterval;
         let isHovering = false;
@@ -807,7 +906,6 @@
                     if (carrusel.scrollLeft >= maxScroll - 5) {
                         carrusel.scrollTo({ left: 0, behavior: 'smooth' });
                     } else {
-                        // Calcula el ancho de un elemento dinámicamente
                         const itemWidth = carrusel.querySelector('.carousel-item').offsetWidth + 20;
                         carrusel.scrollBy({ left: itemWidth, behavior: 'smooth' });
                     }
@@ -822,7 +920,7 @@
         
         iniciarCarrusel();
 
-        // === MODAL PERSONALIZADO (CERO ALERTAS DEL NAVEGADOR) ===
+        // === MODAL PERSONALIZADO ===
         const modalOverlay = document.getElementById('modalOverlay');
         const modalMensaje = document.getElementById('modalMensaje');
 
@@ -835,17 +933,17 @@
             modalOverlay.style.display = 'none';
         }
 
-        // Cerrar modal al hacer clic fuera del cuadro
         modalOverlay.addEventListener('click', function(e) {
             if(e.target === modalOverlay) cerrarAlerta();
         });
 
-        // --- PERFIL AVANZADO ---
+        // --- PERFIL AVANZADO (Adaptable al tema actual) ---
         function mostrarPerfilAvanzado() {
+            const currentAssets = themeAssets[activeThemeKey] || themeAssets['halloween'];
             const perfilHTML = `
-                <div class="profile-banner"></div>
+                <div class="profile-banner" style="background-image: url('${currentAssets.banner}');"></div>
                 <div class="profile-content">
-                    <img src="adele_fans.perfil.jpeg" class="profile-avatar" alt="Avatar">
+                    <img src="${currentAssets.logo}" class="profile-avatar" alt="Avatar">
                     <h3 style="color: var(--gold); margin: 10px 0; font-size: 26px;">ADELE_FANS 540</h3>
                     <p style="font-size: 15px;">Comunidad Oficial de Daydreamers en Español.</p>
                     
@@ -880,31 +978,48 @@
             abrirModal(albumHTML);
         }
 
-        // === AJUSTES DE PÁGINA (Funcionan de verdad) ===
+        // === AJUSTES DE PÁGINA Y CAMBIO DE TEMA ===
         const settingsPanel = document.getElementById('settingsPanel');
 
         function toggleSettings() {
             settingsPanel.classList.toggle('open');
-            // Cierra el menú hamburguesa si estaba abierto para no superponerse
             cerrarMenu();
         }
 
-        // 1. Cambiar Tema Visual
+        // 1. Cambiar Tema Visual Dinámicamente (Banner, Logo, Fondo y Estilos)
         function cambiarTema(tema, elementoBoton) {
-            // Quitar clases previas
-            document.body.classList.remove('theme-red-white', 'theme-liquid-glass');
+            document.body.classList.remove('theme-halloween', 'theme-default', 'theme-red-white', 'theme-liquid-glass');
             
-            if (tema !== 'default') {
-                document.body.classList.add('theme-' + tema);
+            activeThemeKey = tema;
+            document.body.classList.add('theme-' + tema);
+
+            const assets = themeAssets[tema] || themeAssets['halloween'];
+
+            // Cambiar Logo y Banner en la página
+            const navLogo = document.getElementById('nav-logo');
+            if (navLogo) navLogo.src = assets.logo;
+
+            const mainBanner = document.getElementById('main-banner');
+            if (mainBanner) mainBanner.src = assets.banner;
+
+            // Cambiar Tipografía Predeterminada según el Tema
+            if (assets.font) {
+                document.documentElement.style.setProperty('--font-family', assets.font);
+                const fontSelector = document.getElementById('fontSelector');
+                if (fontSelector) {
+                    fontSelector.value = assets.font;
+                }
             }
 
-            // Efecto visual en los botones
+            // Resaltar el botón activo en el panel
             const botones = document.querySelectorAll('.theme-btn');
             botones.forEach(btn => btn.classList.remove('active'));
-            elementoBoton.classList.add('active');
+            if (elementoBoton) {
+                elementoBoton.classList.add('active');
+            }
         }
 
-        // 2. Cambiar Fuente
+        // 2. Cambiar Fuente Manualmente
         function cambiarFuente(font) {
             document.documentElement.style.setProperty('--font-family', font);
         }
@@ -922,43 +1037,39 @@
         function toggleAnimaciones(isOn) {
             if(!isOn) {
                 document.body.classList.add('no-animations');
-                clearInterval(carruselInterval); // Detiene el carrusel
+                clearInterval(carruselInterval);
             } else {
                 document.body.classList.remove('no-animations');
-                iniciarCarrusel(); // Reinicia el carrusel
+                iniciarCarrusel();
             }
         }
-       window.addEventListener('load', () => {
-    const imagen = document.getElementById('imagen-previa');
-    const video = document.getElementById('video-principal');
-    const tiempoImagen = 15000; // 5000 = 5 segundos
 
-    // Función que controla el ciclo de mostrar imagen y luego video
-    function iniciarCiclo() {
-        // 1. Mostrar la imagen y ocultar el video
-        imagen.style.display = 'inline-block';
-        video.style.display = 'none';
+        // Ciclo automático de Imagen y Video
+        window.addEventListener('load', () => {
+            const imagen = document.getElementById('imagen-previa');
+            const video = document.getElementById('video-principal');
+            const tiempoImagen = 15000;
 
-        // 2. Esperar 5 segundos para hacer el cambio
-        setTimeout(() => {
-            imagen.style.display = 'none';
-            video.style.display = 'inline-block';
-            
-            video.currentTime = 0; // Regresa el video al inicio
-            video.play();          // Reproduce el video automáticamente
-        }, tiempoImagen);
-    }
+            function iniciarCiclo() {
+                imagen.style.display = 'inline-block';
+                video.style.display = 'none';
 
-    if (imagen && video) {
-        // Iniciar el primer ciclo al cargar la página
-        iniciarCiclo();
+                setTimeout(() => {
+                    imagen.style.display = 'none';
+                    video.style.display = 'inline-block';
+                    video.currentTime = 0;
+                    video.play();
+                }, tiempoImagen);
+            }
 
-        // 3. Detectar cuando el video termina para repetir el proceso
-        video.addEventListener('ended', () => {
-            iniciarCiclo();
+            if (imagen && video) {
+                iniciarCiclo();
+                video.addEventListener('ended', () => {
+                    iniciarCiclo();
+                });
+            }
         });
-    }
-});
     </script>
+    
 </body>
 </html>
