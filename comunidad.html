@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#660000">
-    <meta name="description" content="ADELE_FANS - Únete a la comunidad mundial de Daydreamers">
+    <meta name="description" content="ADELE_FANS - Join the worldwide Daydreamers community" data-i18n-content="meta_desc">
     <link rel="manifest" href="manifest.json">
-    <title>ADELE_FANS - Únete a la Comunidad</title>
+    <title>ADELE_FANS - Join the Community</title>
     
     <!-- Librería de Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -662,6 +662,17 @@
             .music-player-section { margin: 20px 0; }
             .toast { bottom: 20px; right: 20px; left: 20px; }
         }
+        /* --- TEMA: HALLOWEEN --- */
+        body.theme-halloween {
+            --primary-red: #e65c00;
+            --dark-bg: #0d0400;
+            --text-light: #f5f5f5;
+            --glass-bg: rgba(25, 10, 0, 0.55);
+            --glass-border: rgba(255, 119, 0, 0.35);
+            --gold: #ff7700;
+            --bg-image: url('halloween-fondo.jpg');
+            background: linear-gradient(135deg, #0d0400, #2b0f00) !important;
+        }
     </style>
 </head>
 <body>
@@ -669,7 +680,7 @@
     <!-- NAVEGACIÓN -->
     <nav>
         <a href="index.html" class="logo-container">
-            <img src="adele_fans.perfil.jpeg" alt="Perfil" class="perfil-img">
+            <img src="adele_fans.perfil.jpeg" alt="Profile" data-i18n-alt="alt_profile" class="perfil-img">
             <span class="logo-text">ADELE_FANS</span>
         </a>
         <div class="hamburger" id="hamburger-btn">
@@ -679,9 +690,9 @@
 
     <!-- MENÚ LATERAL -->
     <div class="sidebar" id="sidebar">
-        <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
-        <a href="transmision.html"><i class="fas fa-video"></i> Transmisiones</a>
-        <a href="index.html#galeria" onclick="cerrarMenu()"><i class="fas fa-images"></i> Galeria</a>
+        <a href="index.html"><i class="fas fa-home"></i> <span data-i18n="nav_home">Home</span></a>
+        <a href="transmision.html"><i class="fas fa-video"></i> <span data-i18n="nav_broadcasts">Broadcasts</span></a>
+        <a href="index.html#galeria" onclick="cerrarMenu()"><i class="fas fa-images"></i> <span data-i18n="nav_gallery">Gallery</span></a>
     </div>
 
     <!-- CONTENIDO PRINCIPAL (FORMULARIO) -->
@@ -689,80 +700,80 @@
         <div class="form-section fade-in">
             <div class="form-header">
                 <i class="fas fa-envelope-open-text"></i>
-                <h1>¿Quieres formar parte de ADELE_FANS?</h1>
-                <p>Únete a miles de Daydreamers. Llena el siguiente formulario para registrarte oficialmente en nuestra comunidad y recibir contenido exclusivo.</p>
+                <h1 data-i18n="hero_title">Want to be part of ADELE_FANS?</h1>
+                <p data-i18n="hero_text">Join thousands of Daydreamers. Fill out the form below to officially register in our community and receive exclusive content.</p>
             </div>
 
             <!-- REPRODUCTOR DE MÚSICA (OPCIONAL) -->
             <div class="music-player-section" id="musicPlayer">
-                <h3><i class="fas fa-music"></i> Escucha mientras te registras</h3>
+                <h3><i class="fas fa-music"></i> <span data-i18n="music_title">Listen while you register</span></h3>
                 <audio controls>
                     <source src="08 Water Under The Bridge.mp3" type="audio/mpeg">
-                    Tu navegador no soporta el reproductor de audio.
+                    <span data-i18n="audio_fallback">Your browser does not support the audio player.</span>
                 </audio>
             </div>
             
             <form id="registroForm">
                 <div class="form-group">
-                    <label for="nombre"><i class="fas fa-user"></i> Nombre o Apodo</label>
-                    <input type="text" id="nombre" placeholder="¿Cómo te gusta que te llamen?" required>
+                    <label for="nombre"><i class="fas fa-user"></i> <span data-i18n="l_name">Name or Nickname</span></label>
+                    <input type="text" id="nombre" placeholder="What do you like to be called?" data-i18n-placeholder="ph_name" required>
                     <div class="error-message"></div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="correo"><i class="fas fa-envelope"></i> Correo Electrónico</label>
-                    <input type="email" id="correo" placeholder="Ej: daydreamer@gmail.com" required>
+                    <label for="correo"><i class="fas fa-envelope"></i> <span data-i18n="l_email">Email Address</span></label>
+                    <input type="email" id="correo" placeholder="E.g. daydreamer@gmail.com" data-i18n-placeholder="ph_email" required>
                     <div class="error-message"></div>
                 </div>
 
                 <div class="form-group">
-                    <label for="verificar-email"><i class="fas fa-check"></i> Confirma tu Correo</label>
-                    <input type="email" id="verificar-email" placeholder="Reingresa tu correo electrónico" required>
+                    <label for="verificar-email"><i class="fas fa-check"></i> <span data-i18n="l_email2">Confirm your Email</span></label>
+                    <input type="email" id="verificar-email" placeholder="Re-enter your email address" data-i18n-placeholder="ph_email2" required>
                     <div class="error-message"></div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="numero"><i class="fas fa-phone"></i> Número Telefónico (Opcional)</label>
-                    <input type="tel" id="numero" placeholder="Con código de área (+52, +34, etc.)">
+                    <label for="numero"><i class="fas fa-phone"></i> <span data-i18n="l_phone">Phone Number (Optional)</span></label>
+                    <input type="tel" id="numero" placeholder="With area code (+52, +34, etc.)" data-i18n-placeholder="ph_phone">
                     <div class="error-message"></div>
                 </div>
 
                 <div class="form-group">
-                    <label for="pais"><i class="fas fa-globe"></i> País</label>
-                    <input type="text" id="pais" list="paises-list" placeholder="¿Desde dónde nos apoyas?" required>
+                    <label for="pais"><i class="fas fa-globe"></i> <span data-i18n="l_country">Country</span></label>
+                    <input type="text" id="pais" list="paises-list" placeholder="Where are you supporting us from?" data-i18n-placeholder="ph_country" required>
                     <datalist id="paises-list">
-                        <option value="México">
-                        <option value="España">
-                        <option value="Argentina">
-                        <option value="Colombia">
-                        <option value="Perú">
-                        <option value="Chile">
-                        <option value="Canadá">
-                        <option value="Estados Unidos">
-                        <option value="Francia">
-                        <option value="Italia">
-                        <option value="Alemania">
-                        <option value="Reino Unido">
-                        <option value="Brasil">
-                        <option value="Portugal">
-                        <option value="Austria">
+                        <option value="Mexico" data-i18n-value="c1">
+                        <option value="Spain" data-i18n-value="c2">
+                        <option value="Argentina" data-i18n-value="c3">
+                        <option value="Colombia" data-i18n-value="c4">
+                        <option value="Peru" data-i18n-value="c5">
+                        <option value="Chile" data-i18n-value="c6">
+                        <option value="Canada" data-i18n-value="c7">
+                        <option value="United States" data-i18n-value="c8">
+                        <option value="France" data-i18n-value="c9">
+                        <option value="Italy" data-i18n-value="c10">
+                        <option value="Germany" data-i18n-value="c11">
+                        <option value="United Kingdom" data-i18n-value="c12">
+                        <option value="Brazil" data-i18n-value="c13">
+                        <option value="Portugal" data-i18n-value="c14">
+                        <option value="Austria" data-i18n-value="c15">
                     </datalist>
                     <div class="error-message"></div>
                 </div>
 
                 <div class="form-group">
-                    <label for="motivo"><i class="fas fa-heart"></i> ¿Por qué quieres formar parte de ADELE_FANS?</label>
-                    <textarea id="motivo" placeholder="Cuéntanos qué significa la música de Adele para ti..." required></textarea>
+                    <label for="motivo"><i class="fas fa-heart"></i> <span data-i18n="l_reason">Why do you want to be part of ADELE_FANS?</span></label>
+                    <textarea id="motivo" placeholder="Tell us what Adele's music means to you..." data-i18n-placeholder="ph_reason" required></textarea>
                     <div class="error-message"></div>
                 </div>
 
                 <div class="form-group">
-                    <label for="foto"><i class="fas fa-image"></i> Foto de Perfil (Opcional)</label>
+                    <label for="foto"><i class="fas fa-image"></i> <span data-i18n="l_photo">Profile Photo (Optional)</span></label>
                     <div class="upload-area" onclick="document.getElementById('foto').click()">
                         <i class="fas fa-cloud-upload-alt"></i>
-                        <p>Arrastra tu foto aquí o haz click</p>
+                        <p data-i18n="drop_text">Drag your photo here or click</p>
                     </div>
-                    <img id="fotoPreview" class="preview-imagen" alt="Vista previa">
+                    <img id="fotoPreview" class="preview-imagen" alt="Preview" data-i18n-alt="alt_preview">
                     <input type="file" id="foto" accept="image/*" style="display:none;">
                     <div class="error-message"></div>
                 </div>
@@ -770,22 +781,22 @@
                 <!-- TÉRMINOS Y CONDICIONES -->
                 <div class="checkbox-group">
                     <input type="checkbox" id="terminos" required>
-                    <label for="terminos">Acepto los <a href="#" onclick="mostrarTerminos(event)">términos y condiciones</a> de ADELE_FANS</label>
+                    <label for="terminos" data-i18n-html="terms_html">I accept the <a href="#" onclick="mostrarTerminos(event)">terms and conditions</a> of ADELE_FANS</label>
                 </div>
 
                 <!-- SUSCRIPCIÓN A NEWSLETTER -->
                 <div class="checkbox-group">
                     <input type="checkbox" id="newsletter" checked>
-                    <label for="newsletter">Deseo recibir contenido exclusivo y actualizaciones sobre Adele</label>
+                    <label for="newsletter" data-i18n="news_label">I would like to receive exclusive content and updates about Adele</label>
                 </div>
 
                 <!-- BOTONES -->
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
                     <button type="button" class="btn-secondary" onclick="previsualizarDatos()">
-                        <i class="fas fa-eye"></i> Vista Previa
+                        <i class="fas fa-eye"></i> <span data-i18n="btn_preview">Preview</span>
                     </button>
                     <button type="submit" class="btn-submit">
-                        <i class="fas fa-paper-plane"></i> Enviar Solicitud
+                        <i class="fas fa-paper-plane"></i> <span data-i18n="btn_submit">Submit Request</span>
                     </button>
                 </div>
             </form>
@@ -793,22 +804,22 @@
             <!-- PREVISUALIZADOR DE DATOS -->
             <div class="preview-section" id="previewSection">
                 <h3 style="color: var(--gold); margin-bottom: 15px;">
-                    <i class="fas fa-check-circle"></i> Verifica tu información
+                    <i class="fas fa-check-circle"></i> <span data-i18n="verify_title">Verify your information</span>
                 </h3>
                 <div class="preview-item">
-                    <strong>Nombre:</strong> <span id="previewNombre">-</span>
+                    <strong data-i18n="p_name">Name:</strong> <span id="previewNombre">-</span>
                 </div>
                 <div class="preview-item">
-                    <strong>Correo:</strong> <span id="previewCorreo">-</span>
+                    <strong data-i18n="p_email">Email:</strong> <span id="previewCorreo">-</span>
                 </div>
                 <div class="preview-item">
-                    <strong>Teléfono:</strong> <span id="previewNumero">-</span>
+                    <strong data-i18n="p_phone">Phone:</strong> <span id="previewNumero">-</span>
                 </div>
                 <div class="preview-item">
-                    <strong>País:</strong> <span id="previewPais">-</span>
+                    <strong data-i18n="p_country">Country:</strong> <span id="previewPais">-</span>
                 </div>
                 <div class="preview-item">
-                    <strong>Newsletter:</strong> <span id="previewNewsletter">-</span>
+                    <strong data-i18n="p_newsletter">Newsletter:</strong> <span id="previewNewsletter">-</span>
                 </div>
             </div>
         </div>
@@ -820,43 +831,52 @@
     </div>
 
     <div class="settings-panel" id="settingsPanel">
-        <h3 class="settings-title"><i class="fas fa-sliders-h"></i> Ajustes</h3>
+        <h3 class="settings-title"><i class="fas fa-sliders-h"></i> <span data-i18n="settings_title">Settings</span></h3>
         
         <div class="setting-group">
-            <label>Tema Visual</label>
+            <label data-i18n="setting_theme">Visual Theme</label>
             <div class="theme-options">
-                <img src="adele_fans.perfil.jpeg" class="theme-btn active" title="Predeterminado" onclick="cambiarTema('default', this)">
-                <img src="https://i.pinimg.com/736x/6f/12/51/6f1251ff12fd3069b8b22e1ce5eac9c2.jpg" class="theme-btn" title="Rojo y Blanco" onclick="cambiarTema('red-white', this)">
-                <img src="https://i.pinimg.com/736x/d7/07/90/d707903b5b261ef08afb8ab23772d222.jpg" class="theme-btn" title="Liquid Glass" onclick="cambiarTema('liquid-glass', this)">
+                <img src="halloween-logo.jpeg" class="theme-btn" data-theme="halloween" title="Halloween" data-i18n-title="theme_halloween" onclick="cambiarTema('halloween', this)">
+                <img src="adele_fans.perfil.jpeg" class="theme-btn active" data-theme="default" title="Default" data-i18n-title="theme_default" onclick="cambiarTema('default', this)">
+                <img src="https://i.pinimg.com/736x/6f/12/51/6f1251ff12fd3069b8b22e1ce5eac9c2.jpg" class="theme-btn" data-theme="red-white" title="Red & White" data-i18n-title="theme_redwhite" onclick="cambiarTema('red-white', this)">
+                <img src="https://i.pinimg.com/736x/d7/07/90/d707903b5b261ef08afb8ab23772d222.jpg" class="theme-btn" data-theme="liquid-glass" title="Liquid Glass" data-i18n-title="theme_liquid" onclick="cambiarTema('liquid-glass', this)">
             </div>
         </div>
 
         <div class="setting-group">
-            <label>Tipografía</label>
+            <label data-i18n="setting_typography">Typography</label>
             <select id="fontSelector" onchange="cambiarFuente(this.value)">
-                <option value="'Helvetica Neue', Arial, sans-serif">Moderna (Predeterminada)</option>
-                <option value="'Georgia', serif">Elegante (Serif)</option>
-                <option value="'Courier New', monospace">Retro (Monoespaciada)</option>
-                <option value="cursive">Artística (Cursiva)</option>
+                <option value="'Helvetica Neue', Arial, sans-serif" data-i18n="font_modern">Modern (Default)</option>
+                <option value="'Georgia', serif" data-i18n="font_elegant">Elegant (Serif)</option>
+                <option value="'Courier New', monospace" data-i18n="font_retro">Retro (Monospace)</option>
+                <option value="cursive" data-i18n="font_artistic">Artistic (Cursive)</option>
+            </select>
+        </div>
+
+        <div class="setting-group">
+            <label for="langSelector" data-i18n="setting_language">Language</label>
+            <select id="langSelector" onchange="cambiarIdioma(this.value)">
+                <option value="en">English</option>
+                <option value="es">Español</option>
             </select>
         </div>
 
         <div class="switch-container">
-            <span><i class="fas fa-sun"></i> Modo Claro</span>
+            <span><i class="fas fa-sun"></i> <span data-i18n="light_mode">Light Mode</span></span>
             <input type="checkbox" id="lightModeToggle" onchange="toggleLightMode(this.checked)" style="transform: scale(1.4); cursor: pointer;">
         </div>
 
         <div class="switch-container">
-            <span><i class="fas fa-magic"></i> Animaciones</span>
+            <span><i class="fas fa-magic"></i> <span data-i18n="animations">Animations</span></span>
             <input type="checkbox" id="animToggle" checked onchange="toggleAnimaciones(this.checked)" style="transform: scale(1.4); cursor: pointer;">
         </div>
 
         <div class="switch-container">
-            <span><i class="fas fa-volume-up"></i> Reproductor</span>
+            <span><i class="fas fa-volume-up"></i> <span data-i18n="player">Player</span></span>
             <input type="checkbox" id="musicToggle" checked onchange="toggleMusicPlayer(this.checked)" style="transform: scale(1.4); cursor: pointer;">
         </div>
         
-        <button class="btn-modal" onclick="toggleSettings()" style="width: 100%; margin-top: 15px;">Cerrar Ajustes</button>
+        <button class="btn-modal" onclick="toggleSettings()" style="width: 100%; margin-top: 15px;" data-i18n="close_settings">Close Settings</button>
     </div>
 
     <!-- MODAL DE ALERTAS INTERNAS -->
@@ -869,24 +889,24 @@
     <!-- MODAL DE TÉRMINOS Y CONDICIONES -->
     <div class="custom-modal-overlay" id="terminosOverlay">
         <div class="custom-modal" id="terminosContenido" style="max-width: 550px; max-height: 80vh; overflow-y: auto;">
-            <h3 class="modal-title">Términos y Condiciones</h3>
+            <h3 class="modal-title" data-i18n="terms_title">Terms and Conditions</h3>
             <div style="text-align: left; font-size: 14px; line-height: 1.6; color: #ccc;">
-                <h4 style="color: var(--gold); margin-top: 15px; margin-bottom: 10px;">1. Aceptación de Términos</h4>
-                <p>Al registrarte en ADELE_FANS aceptas cumplir con estos términos y condiciones.</p>
+                <h4 style="color: var(--gold); margin-top: 15px; margin-bottom: 10px;" data-i18n="t1_h">1. Acceptance of Terms</h4>
+                <p data-i18n="t1_p">By registering with ADELE_FANS you agree to comply with these terms and conditions.</p>
 
-                <h4 style="color: var(--gold); margin-top: 15px; margin-bottom: 10px;">2. Uso de la Comunidad</h4>
-                <p>La comunidad es un espacio seguro para fans de Adele. Se prohíbe contenido ofensivo, spam o comercial no autorizado.</p>
+                <h4 style="color: var(--gold); margin-top: 15px; margin-bottom: 10px;" data-i18n="t2_h">2. Use of the Community</h4>
+                <p data-i18n="t2_p">The community is a safe space for Adele fans. Offensive content, spam and unauthorized commercial content are prohibited.</p>
 
-                <h4 style="color: var(--gold); margin-top: 15px; margin-bottom: 10px;">3. Privacidad de Datos</h4>
-                <p>Tus datos personales se utilizarán únicamente para contactarte sobre actualizaciones de la comunidad.</p>
+                <h4 style="color: var(--gold); margin-top: 15px; margin-bottom: 10px;" data-i18n="t3_h">3. Data Privacy</h4>
+                <p data-i18n="t3_p">Your personal data will only be used to contact you about community updates.</p>
 
-                <h4 style="color: var(--gold); margin-top: 15px; margin-bottom: 10px;">4. Derechos de Autor</h4>
-                <p>Todo contenido compartido debe respetar los derechos de autor de Adele y Universal Music.</p>
+                <h4 style="color: var(--gold); margin-top: 15px; margin-bottom: 10px;" data-i18n="t4_h">4. Copyright</h4>
+                <p data-i18n="t4_p">All shared content must respect the copyrights of Adele and Universal Music.</p>
 
-                <h4 style="color: var(--gold); margin-top: 15px; margin-bottom: 10px;">5. Cambios en los Términos</h4>
-                <p>Nos reservamos el derecho de modificar estos términos en cualquier momento.</p>
+                <h4 style="color: var(--gold); margin-top: 15px; margin-bottom: 10px;" data-i18n="t5_h">5. Changes to the Terms</h4>
+                <p data-i18n="t5_p">We reserve the right to modify these terms at any time.</p>
             </div>
-            <button class="btn-modal" onclick="cerrarTerminos()" style="width: 100%; margin-top: 20px;">Entendido</button>
+            <button class="btn-modal" onclick="cerrarTerminos()" style="width: 100%; margin-top: 20px;" data-i18n="got_it">Got it</button>
         </div>
     </div>
 
@@ -900,15 +920,184 @@
                 <a href="https://youtube.com/@adele_fans540?si=RrqGesxQK05S6-A0" target="_blank" rel="noopener" title="YouTube"><i class="fab fa-youtube"></i></a>
                 <a href="https://www.facebook.com/adele.daydreamer.2025/about_overview" target="_blank" rel="noopener" title="Facebook"><i class="fab fa-facebook"></i></a>
             </div>
-            <p>&copy; 2024 ADELE_FANS Comunidad de Daydreamers | 
-                <a href="#" onclick="event.preventDefault(); mostrarTerminos();">Privacidad</a> | 
-                <a href="#" onclick="event.preventDefault(); mostrarTerminos();">Términos</a> | 
-                <a href="adele.fans50@gmail.com">Contacto</a>
+            <p><span data-i18n="footer_copy">&copy; 2024 ADELE_FANS Daydreamers Community</span> | 
+                <a href="#" onclick="event.preventDefault(); mostrarTerminos();" data-i18n="f_privacy">Privacy</a> | 
+                <a href="#" onclick="event.preventDefault(); mostrarTerminos();" data-i18n="f_terms">Terms</a> | 
+                <a href="mailto:adele.fans50@gmail.com" data-i18n="f_contact">Contact</a>
             </p>
         </div>
     </footer>
 
     <script>
+        // =====================================================
+        //  IDIOMAS (English por defecto / Español)
+        //  La preferencia se comparte con index.html (clave "lang")
+        // =====================================================
+        const I18N = {
+            en: {
+                page_title: "ADELE_FANS - Join the Community",
+                meta_desc: "ADELE_FANS - Join the worldwide Daydreamers community",
+                alt_profile: "Profile",
+                nav_home: "Home", nav_broadcasts: "Broadcasts", nav_gallery: "Gallery",
+                hero_title: "Want to be part of ADELE_FANS?",
+                hero_text: "Join thousands of Daydreamers. Fill out the form below to officially register in our community and receive exclusive content.",
+                music_title: "Listen while you register",
+                audio_fallback: "Your browser does not support the audio player.",
+                l_name: "Name or Nickname", ph_name: "What do you like to be called?",
+                l_email: "Email Address", ph_email: "E.g. daydreamer@gmail.com",
+                l_email2: "Confirm your Email", ph_email2: "Re-enter your email address",
+                l_phone: "Phone Number (Optional)", ph_phone: "With area code (+52, +34, etc.)",
+                l_country: "Country", ph_country: "Where are you supporting us from?",
+                l_reason: "Why do you want to be part of ADELE_FANS?", ph_reason: "Tell us what Adele's music means to you...",
+                l_photo: "Profile Photo (Optional)", drop_text: "Drag your photo here or click", alt_preview: "Preview",
+                terms_html: "I accept the <a href=\"#\" onclick=\"mostrarTerminos(event)\">terms and conditions</a> of ADELE_FANS",
+                news_label: "I would like to receive exclusive content and updates about Adele",
+                btn_preview: "Preview", btn_submit: "Submit Request",
+                verify_title: "Verify your information",
+                p_name: "Name:", p_email: "Email:", p_phone: "Phone:", p_country: "Country:", p_newsletter: "Newsletter:",
+                settings_title: "Settings", setting_theme: "Visual Theme",
+                theme_halloween: "Halloween", theme_default: "Default", theme_redwhite: "Red & White", theme_liquid: "Liquid Glass",
+                setting_typography: "Typography",
+                font_modern: "Modern (Default)", font_elegant: "Elegant (Serif)", font_retro: "Retro (Monospace)", font_artistic: "Artistic (Cursive)",
+                setting_language: "Language", light_mode: "Light Mode", animations: "Animations", player: "Player",
+                close_settings: "Close Settings",
+                terms_title: "Terms and Conditions",
+                t1_h: "1. Acceptance of Terms", t1_p: "By registering with ADELE_FANS you agree to comply with these terms and conditions.",
+                t2_h: "2. Use of the Community", t2_p: "The community is a safe space for Adele fans. Offensive content, spam and unauthorized commercial content are prohibited.",
+                t3_h: "3. Data Privacy", t3_p: "Your personal data will only be used to contact you about community updates.",
+                t4_h: "4. Copyright", t4_p: "All shared content must respect the copyrights of Adele and Universal Music.",
+                t5_h: "5. Changes to the Terms", t5_p: "We reserve the right to modify these terms at any time.",
+                got_it: "Got it",
+                footer_copy: "© 2024 ADELE_FANS Daydreamers Community", f_privacy: "Privacy", f_terms: "Terms", f_contact: "Contact",
+                c1: "Mexico", c2: "Spain", c3: "Argentina", c4: "Colombia", c5: "Peru", c6: "Chile", c7: "Canada", c8: "United States",
+                c9: "France", c10: "Italy", c11: "Germany", c12: "United Kingdom", c13: "Brazil", c14: "Portugal", c15: "Austria",
+                err_name: "The name must be at least 3 characters long",
+                err_email: "Please enter a valid email address",
+                err_email_match: "The emails do not match",
+                err_phone: "The phone number is not valid",
+                err_country: "Please enter a valid country",
+                err_reason: "Your answer must be at least 10 characters long",
+                err_img_type: "Please select a valid image",
+                err_img_size: "The image must not exceed 5MB",
+                img_loaded: "Image loaded successfully",
+                yes: "Yes", no: "No", not_specified: "Not specified",
+                draft_restored: "Form restored from your last session",
+                fix_fields: "Please fill in all fields correctly",
+                accept_terms: "You must accept the terms and conditions",
+                processing_title: "Processing your registration",
+                processing_text: "Please wait a moment while we send your data...",
+                ok_title: "Registration Successful!",
+                ok_text: "Thank you for being part of the Daydreamers community. Check your email to confirm your registration. We will contact you within a few days.",
+                accept: "OK",
+                welcome_toast: "Welcome to ADELE_FANS! 🎵",
+                fail_title: "An error occurred",
+                fail_text: "Sorry, we couldn't process your registration right now. Please try again later.",
+                fail_error: "Error:",
+                fail_toast: "There was an error while registering",
+                close: "Close"
+            },
+            es: {
+                page_title: "ADELE_FANS - Únete a la Comunidad",
+                meta_desc: "ADELE_FANS - Únete a la comunidad mundial de Daydreamers",
+                alt_profile: "Perfil",
+                nav_home: "Inicio", nav_broadcasts: "Transmisiones", nav_gallery: "Galeria",
+                hero_title: "¿Quieres formar parte de ADELE_FANS?",
+                hero_text: "Únete a miles de Daydreamers. Llena el siguiente formulario para registrarte oficialmente en nuestra comunidad y recibir contenido exclusivo.",
+                music_title: "Escucha mientras te registras",
+                audio_fallback: "Tu navegador no soporta el reproductor de audio.",
+                l_name: "Nombre o Apodo", ph_name: "¿Cómo te gusta que te llamen?",
+                l_email: "Correo Electrónico", ph_email: "Ej: daydreamer@gmail.com",
+                l_email2: "Confirma tu Correo", ph_email2: "Reingresa tu correo electrónico",
+                l_phone: "Número Telefónico (Opcional)", ph_phone: "Con código de área (+52, +34, etc.)",
+                l_country: "País", ph_country: "¿Desde dónde nos apoyas?",
+                l_reason: "¿Por qué quieres formar parte de ADELE_FANS?", ph_reason: "Cuéntanos qué significa la música de Adele para ti...",
+                l_photo: "Foto de Perfil (Opcional)", drop_text: "Arrastra tu foto aquí o haz click", alt_preview: "Vista previa",
+                terms_html: "Acepto los <a href=\"#\" onclick=\"mostrarTerminos(event)\">términos y condiciones</a> de ADELE_FANS",
+                news_label: "Deseo recibir contenido exclusivo y actualizaciones sobre Adele",
+                btn_preview: "Vista Previa", btn_submit: "Enviar Solicitud",
+                verify_title: "Verifica tu información",
+                p_name: "Nombre:", p_email: "Correo:", p_phone: "Teléfono:", p_country: "País:", p_newsletter: "Newsletter:",
+                settings_title: "Ajustes", setting_theme: "Tema Visual",
+                theme_halloween: "Halloween", theme_default: "Predeterminado", theme_redwhite: "Rojo y Blanco", theme_liquid: "Liquid Glass",
+                setting_typography: "Tipografía",
+                font_modern: "Moderna (Predeterminada)", font_elegant: "Elegante (Serif)", font_retro: "Retro (Monoespaciada)", font_artistic: "Artística (Cursiva)",
+                setting_language: "Idioma", light_mode: "Modo Claro", animations: "Animaciones", player: "Reproductor",
+                close_settings: "Cerrar Ajustes",
+                terms_title: "Términos y Condiciones",
+                t1_h: "1. Aceptación de Términos", t1_p: "Al registrarte en ADELE_FANS aceptas cumplir con estos términos y condiciones.",
+                t2_h: "2. Uso de la Comunidad", t2_p: "La comunidad es un espacio seguro para fans de Adele. Se prohíbe contenido ofensivo, spam o comercial no autorizado.",
+                t3_h: "3. Privacidad de Datos", t3_p: "Tus datos personales se utilizarán únicamente para contactarte sobre actualizaciones de la comunidad.",
+                t4_h: "4. Derechos de Autor", t4_p: "Todo contenido compartido debe respetar los derechos de autor de Adele y Universal Music.",
+                t5_h: "5. Cambios en los Términos", t5_p: "Nos reservamos el derecho de modificar estos términos en cualquier momento.",
+                got_it: "Entendido",
+                footer_copy: "© 2024 ADELE_FANS Comunidad de Daydreamers", f_privacy: "Privacidad", f_terms: "Términos", f_contact: "Contacto",
+                c1: "México", c2: "España", c3: "Argentina", c4: "Colombia", c5: "Perú", c6: "Chile", c7: "Canadá", c8: "Estados Unidos",
+                c9: "Francia", c10: "Italia", c11: "Alemania", c12: "Reino Unido", c13: "Brasil", c14: "Portugal", c15: "Austria",
+                err_name: "El nombre debe tener al menos 3 caracteres",
+                err_email: "Por favor ingresa un correo válido",
+                err_email_match: "Los correos no coinciden",
+                err_phone: "El teléfono no es válido",
+                err_country: "Por favor ingresa un país válido",
+                err_reason: "Tu respuesta debe tener al menos 10 caracteres",
+                err_img_type: "Por favor selecciona una imagen válida",
+                err_img_size: "La imagen no debe superar 5MB",
+                img_loaded: "Imagen cargada correctamente",
+                yes: "Sí", no: "No", not_specified: "No especificado",
+                draft_restored: "Formulario restaurado de tu última sesión",
+                fix_fields: "Por favor completa correctamente todos los campos",
+                accept_terms: "Debes aceptar los términos y condiciones",
+                processing_title: "Procesando tu registro",
+                processing_text: "Por favor espera un momento mientras enviamos tus datos...",
+                ok_title: "¡Registro Exitoso!",
+                ok_text: "Gracias por ser parte de la comunidad de Daydreamers. Revisa tu correo para confirmar tu registro. Dentro de unos días nos comunicaremos contigo.",
+                accept: "Aceptar",
+                welcome_toast: "¡Bienvenido a ADELE_FANS! 🎵",
+                fail_title: "Ocurrió un error",
+                fail_text: "Lo sentimos, no pudimos procesar tu registro en este momento. Inténtalo más tarde.",
+                fail_error: "Error:",
+                fail_toast: "Hubo un error al registrarse",
+                close: "Cerrar"
+            }
+        };
+
+        // Idioma activo (por defecto: inglés)
+        function getLang() {
+            try {
+                const l = localStorage.getItem('lang');
+                if (l === 'en' || l === 'es') return l;
+            } catch (e) {}
+            return 'en';
+        }
+
+        function t(key) {
+            const dic = I18N[getLang()] || I18N.en;
+            if (dic[key] !== undefined) return dic[key];
+            return I18N.en[key] !== undefined ? I18N.en[key] : key;
+        }
+
+        function applyLanguage() {
+            const lang = getLang();
+            document.documentElement.lang = lang;
+            document.title = t('page_title');
+            document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+            document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+            document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
+            document.querySelectorAll('[data-i18n-alt]').forEach(el => { el.alt = t(el.dataset.i18nAlt); });
+            document.querySelectorAll('[data-i18n-content]').forEach(el => { el.setAttribute('content', t(el.dataset.i18nContent)); });
+            document.querySelectorAll('[data-i18n-value]').forEach(el => { el.value = t(el.dataset.i18nValue); });
+            const sel = document.getElementById('langSelector');
+            if (sel) sel.value = lang;
+        }
+
+        function cambiarIdioma(lang) {
+            if (lang !== 'en' && lang !== 'es') lang = 'en';
+            try { localStorage.setItem('lang', lang); } catch (e) {}
+            applyLanguage();
+        }
+
+        applyLanguage();
+
         // === SERVICIO WORKER (PWA) ===
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').catch(err => console.log('SW no disponible'));
@@ -1013,23 +1202,23 @@
 
             if (id === 'nombre') {
                 isValid = validarNombre(campo.value);
-                errorMsg = 'El nombre debe tener al menos 3 caracteres';
+                errorMsg = t('err_name');
             } else if (id === 'correo') {
                 isValid = validarEmail(campo.value);
-                errorMsg = 'Por favor ingresa un correo válido';
+                errorMsg = t('err_email');
             } else if (id === 'verificar-email') {
                 const correo = document.getElementById('correo').value;
                 isValid = campo.value === correo;
-                errorMsg = 'Los correos no coinciden';
+                errorMsg = t('err_email_match');
             } else if (id === 'numero') {
                 isValid = validarTelefono(campo.value);
-                errorMsg = 'El teléfono no es válido';
+                errorMsg = t('err_phone');
             } else if (id === 'pais') {
                 isValid = campo.value.trim().length >= 2;
-                errorMsg = 'Por favor ingresa un país válido';
+                errorMsg = t('err_country');
             } else if (id === 'motivo') {
                 isValid = validarMotivo(campo.value);
-                errorMsg = 'Tu respuesta debe tener al menos 10 caracteres';
+                errorMsg = t('err_reason');
             }
 
             if (isValid) {
@@ -1078,12 +1267,12 @@
 
         function manejarArchivo(file) {
             if (!file.type.startsWith('image/')) {
-                mostrarNotificacion('Por favor selecciona una imagen válida', 'error');
+                mostrarNotificacion(t('err_img_type'), 'error');
                 return;
             }
 
             if (file.size > 5 * 1024 * 1024) {
-                mostrarNotificacion('La imagen no debe superar 5MB', 'error');
+                mostrarNotificacion(t('err_img_size'), 'error');
                 return;
             }
 
@@ -1091,7 +1280,7 @@
             reader.onload = (e) => {
                 fotoPreview.src = e.target.result;
                 fotoPreview.classList.add('active');
-                mostrarNotificacion('Imagen cargada correctamente', 'success');
+                mostrarNotificacion(t('img_loaded'), 'success');
             };
             reader.readAsDataURL(file);
         }
@@ -1102,11 +1291,11 @@
             const correo = document.getElementById('correo').value;
             const numero = document.getElementById('numero').value;
             const pais = document.getElementById('pais').value;
-            const newsletter = document.getElementById('newsletter').checked ? 'Sí' : 'No';
+            const newsletter = document.getElementById('newsletter').checked ? t('yes') : t('no');
 
             document.getElementById('previewNombre').textContent = nombre || '-';
             document.getElementById('previewCorreo').textContent = correo || '-';
-            document.getElementById('previewNumero').textContent = numero || 'No especificado';
+            document.getElementById('previewNumero').textContent = numero || t('not_specified');
             document.getElementById('previewPais').textContent = pais || '-';
             document.getElementById('previewNewsletter').textContent = newsletter;
 
@@ -1124,10 +1313,25 @@
         }
 
         function cambiarTema(tema, el) {
-            document.body.classList.remove('theme-red-white', 'theme-liquid-glass');
-            if (tema !== 'default') document.body.classList.add('theme-' + tema);
+            // Limpiar todas las posibles clases de temas para evitar conflictos o acumulación
+            document.body.classList.remove('theme-halloween', 'theme-red-white', 'theme-liquid-glass');
+            
+            // Si el tema no es el predeterminado, aplicar su clase correspondiente
+            if (tema !== 'default') {
+                document.body.classList.add('theme-' + tema);
+            }
+            
+            // Actualizar visualmente qué botón está activo en el panel de ajustes
             document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-            if (el) el.classList.add('active');
+            if (el) {
+                el.classList.add('active');
+            } else {
+                // Buscar el botón automáticamente si la función se llama desde la carga inicial
+                const btnTarget = document.querySelector(`.theme-btn[data-theme="${tema}"]`);
+                if (btnTarget) btnTarget.classList.add('active');
+            }
+            
+            // Guardar la preferencia en localStorage para que index.html y comunidad.html la compartan
             localStorage.setItem('tema', tema);
         }
 
@@ -1137,21 +1341,32 @@
         }
 
         function toggleLightMode(isLight) {
-            if (isLight) document.body.classList.add('light-mode');
-            else document.body.classList.remove('light-mode');
+            if (isLight) {
+                document.body.classList.add('light-mode');
+            } else {
+                document.body.classList.remove('light-mode');
+            }
             localStorage.setItem('lightMode', isLight);
         }
 
         function toggleAnimaciones(isOn) {
-            if (!isOn) document.body.classList.add('no-animations');
-            else document.body.classList.remove('no-animations');
+            if (!isOn) {
+                document.body.classList.add('no-animations');
+            } else {
+                document.body.classList.remove('no-animations');
+            }
             localStorage.setItem('animaciones', isOn);
         }
 
         function toggleMusicPlayer(isOn) {
             const musicPlayer = document.getElementById('musicPlayer');
-            if (isOn) musicPlayer.classList.add('active');
-            else musicPlayer.classList.remove('active');
+            if (musicPlayer) {
+                if (isOn) {
+                    musicPlayer.classList.add('active');
+                } else {
+                    musicPlayer.classList.remove('active');
+                }
+            }
             localStorage.setItem('musicPlayer', isOn);
         }
 
@@ -1163,7 +1378,7 @@
             const animaciones = localStorage.getItem('animaciones') !== 'false';
             const musicPlayer = localStorage.getItem('musicPlayer') !== 'false';
 
-            cambiarTema(tema, document.querySelector(`.theme-btn[title="${tema === 'default' ? 'Predeterminado' : tema === 'red-white' ? 'Rojo y Blanco' : 'Liquid Glass'}"]`));
+            cambiarTema(tema, document.querySelector(`.theme-btn[data-theme="${tema}"]`));
             cambiarFuente(fuente);
             document.getElementById('lightModeToggle').checked = lightMode;
             document.getElementById('animToggle').checked = animaciones;
@@ -1181,7 +1396,7 @@
                     const input = document.getElementById(key);
                     if (input) input.value = value;
                 });
-                mostrarNotificacion('Formulario restaurado de tu última sesión', 'warning');
+                mostrarNotificacion(t('draft_restored'), 'warning');
             }
         });
 
@@ -1222,12 +1437,12 @@
             ];
 
             if (!camposValidos.every(v => v)) {
-                mostrarNotificacion('Por favor completa correctamente todos los campos', 'error');
+                mostrarNotificacion(t('fix_fields'), 'error');
                 return;
             }
 
             if (!document.getElementById('terminos').checked) {
-                mostrarNotificacion('Debes aceptar los términos y condiciones', 'error');
+                mostrarNotificacion(t('accept_terms'), 'error');
                 return;
             }
 
@@ -1238,13 +1453,14 @@
             const pais = document.getElementById('pais').value.trim();
             const motivo = document.getElementById('motivo').value.trim();
             const newsletter = document.getElementById('newsletter').checked;
-            const recaptchaToken = document.getElementById('recaptcha-token').value;
+            const recaptchaEl = document.getElementById('recaptcha-token'); // (el campo no existe en la página: evitamos que falle el envío)
+            const recaptchaToken = recaptchaEl ? recaptchaEl.value : '';
 
             // Modal de "Cargando..."
             abrirModalHTML(`
                 <div class="loading-spinner"></div>
-                <h3 class="modal-title" style="color: var(--gold); margin-top: 20px;">Procesando tu registro</h3>
-                <p>Por favor espera un momento mientras enviamos tus datos...</p>
+                <h3 class="modal-title" style="color: var(--gold); margin-top: 20px;">${t('processing_title')}</h3>
+                <p>${t('processing_text')}</p>
             `);
 
             try {
@@ -1287,23 +1503,23 @@
                 // 3. Mostrar Modal de Éxito
                 abrirModalHTML(`
                     <i class="fas fa-check-circle" style="font-size: 50px; color: var(--success-color); margin-bottom: 15px;"></i>
-                    <h3 class="modal-title" style="color: var(--success-color);">¡Registro Exitoso!</h3>
-                    <p style="font-size: 16px; margin-bottom: 20px;">Gracias por ser parte de la comunidad de Daydreamers. Revisa tu correo para confirmar tu registro. Dentro de unos días nos comunicaremos contigo.</p>
-                    <button class="btn-modal" onclick="cerrarModal(); limpiarFormulario();">Aceptar</button>
+                    <h3 class="modal-title" style="color: var(--success-color);">${t('ok_title')}</h3>
+                    <p style="font-size: 16px; margin-bottom: 20px;">${t('ok_text')}</p>
+                    <button class="btn-modal" onclick="cerrarModal(); limpiarFormulario();">${t('accept')}</button>
                 `);
 
-                mostrarNotificacion('¡Bienvenido a ADELE_FANS! 🎵', 'success');
+                mostrarNotificacion(t('welcome_toast'), 'success');
 
             } catch (error) {
                 console.error("❌ Error en el registro:", error);
                 abrirModalHTML(`
                     <i class="fas fa-times-circle" style="font-size: 50px; color: var(--error-color); margin-bottom: 15px;"></i>
-                    <h3 class="modal-title" style="color: var(--error-color);">Ocurrió un error</h3>
-                    <p style="margin-bottom: 20px;">Lo sentimos, no pudimos procesar tu registro en este momento. Inténtalo más tarde.</p>
-                    <p style="font-size: 12px; color: #999; margin-bottom: 15px;">Error: ${error.message}</p>
-                    <button class="btn-modal" onclick="cerrarModal()">Cerrar</button>
+                    <h3 class="modal-title" style="color: var(--error-color);">${t('fail_title')}</h3>
+                    <p style="margin-bottom: 20px;">${t('fail_text')}</p>
+                    <p style="font-size: 12px; color: #999; margin-bottom: 15px;">${t('fail_error')} ${error.message}</p>
+                    <button class="btn-modal" onclick="cerrarModal()">${t('close')}</button>
                 `);
-                mostrarNotificacion('Hubo un error al registrarse', 'error');
+                mostrarNotificacion(t('fail_toast'), 'error');
             }
         });
 
@@ -1317,5 +1533,6 @@
             localStorage.removeItem('formBorrador');
         }
     </script>
+    
 </body>
 </html>
